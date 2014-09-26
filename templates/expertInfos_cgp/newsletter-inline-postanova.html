@@ -1,0 +1,1366 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<%
+Set Conn = Server.CreateObject("ADODB.Connection")
+Conn.ConnectionString =  application("Base_Newsletter")
+Conn.Open
+
+id_client=request.QueryString("id_client")
+
+CLIENT_SQL="SELECT * FROM CLIENTS WHERE (ID_CLIENT = "&id_client&")"
+Set rsClient=conn.Execute(CLIENT_SQL)
+
+id_exp=rsClient("id_exp")
+id_civilite=rsClient("id_civilite")
+if id_civilite = "1" then
+    civilite="Monsieur"
+elseif id_civilite="2" then
+    civilite="Madame"
+elseif id_civilite="3" then
+    civilite="Mademoiselle"
+elseif id_civilite="4" then
+    civilite="Ma&#238;tre"
+elseif id_civilite="5" then
+    civilite="Docteur"
+elseif id_civilite="6" then
+    civilite="Professeur"
+else
+    civilite=""
+end if
+
+nom_client=rsClient("nom_client")
+
+CABINET_SQL="SELECT * FROM EXPERTS_COMPTABLES WHERE (ID_EXP = "&id_exp&")"
+set rsCabinet=conn.Execute(CABINET_SQL)
+
+if not rsCabinet.eof then
+
+	repertoire_ei = rsCabinet("repertoire_ei")
+	nom_exp = rsCabinet("nom_exp")
+	prenom_exp = rsCabinet("prenom_exp")
+	raison_sociale_exp = rsCabinet("raison_sociale_exp")
+	type_client = rsCabinet("type_client")	
+	adresse1_exp = rsCabinet("adresse1_exp")
+	adresse2_exp = rsCabinet("adresse2_exp")
+	code_postal_exp = rsCabinet("code_postal_exp")
+	commune_exp = rsCabinet("commune_exp")
+	tel_cabinet = rsCabinet("tel_cabinet")
+	fax_cabinet = rsCabinet("fax_cabinet")
+	email_exp = rsCabinet("email_exp")
+	type_perso_site = rsCabinet("type_perso_site")
+	login_site_exp = rsCabinet("login_site_exp")
+	mdp_site_exp = rsCabinet("mdp_site_exp")
+	type_abo = rsCabinet("type_abo")
+	if type_abo="4" then
+	url_site_exp=rsCabinet("url_site_V3")
+	else
+	url_site_exp = rsCabinet("url_site_exp")
+	end if
+	url_facebook = rsCabinet("Facebook")
+	url_twitter = rsCabinet("Twitter")
+	url_linkedin = rsCabinet("Linkedin")
+	url_viadeo = rsCabinet("Viadeo")
+	url_google = rsCabinet("Google")
+	url_vimeo = rsCabinet("Vimeo")
+	url_youtube = rsCabinet("Youtube")
+	logo_groupement = rsCabinet("logo_groupement")
+	lien_groupement = rsCabinet("lien_groupement")
+
+	Select Case type_perso_site
+		Case 38 txt_perso_site = "pop"
+		Case 39 txt_perso_site = "disco"
+	End Select
+end if
+
+'Detect isSocialNetwork'
+if(url_facebook = "" and url_twitter="" and url_linkedin="" and url_viadeo="" and url_google="" and url_vimeo="" and url_youtube="") then
+	isSocialNetwork = False
+else
+	isSocialNetwork = True
+end if
+
+'Detect isOnline'
+if(Request.QueryString("is_online") = 1)then
+	isOnline = True
+else
+	isOnline = False
+end if
+
+'Detect isCollaborateur'
+if(Request.QueryString("is_coll") = 1)then
+	isCollaborateur = True
+else
+	isCollaborateur = False
+end if
+
+set rsCount=conn.Execute("SELECT COUNT(*) FROM FLASH_CABINFORM WHERE id_exp="& id_exp &" AND (afficher=1)")
+set rs=conn.Execute("SELECT * FROM FLASH_CABINFORM WHERE id_exp=" & id_exp &" AND (afficher=1) ORDER BY ordre")
+%>
+<% 'CSS Parser. Use colorParsing.Item("nlColorVariable")' %>
+<!--#include file="../parserCSS.inc"-->
+<!--#include file="emill-cgp.asp"-->
+<%
+idarticleAlaune=request.QueryString("idarticleAlaune")
+idarticle=request.QueryString("idarticle")
+
+'Changement pour newsletter collaborateur'
+if isCollaborateur=True then
+	get_coll = "&is_coll=1"
+	get_date = la_date_collaborateur
+else
+	get_coll = ""
+	get_date = la_date
+end if
+
+online_url = "http://e-newsletter.expert-infos.com/_e-newsletter/"&la_semaine&"/flashinfos_cgp_mail_V3_resp.asp?id_client="&id_client&"&idarticle="&idarticle&"&idarticleAlaune="&idarticleAlaune&"&is_online=1"&get_coll&"&fintrack="
+%>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Newsletter bimensuelle du <%=get_date%></title>
+</head>
+<body style="-ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; background: #787878; color: #333333; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; line-height: 16px; margin: 0; min-width: 100%; padding: 0; text-align: left; width: 100% !important" bgcolor="#787878"><style type="text/css">
+body {
+background-color: #787878;
+}
+body {
+width: 100% !important; min-width: 100%; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; margin: 0; padding: 0;
+}
+.ExternalClass {
+width: 100%;
+}
+.ExternalClass {
+line-height: 100%;
+}
+#backgroundTable {
+margin: 0; padding: 0; width: 100% !important; line-height: 100% !important;
+}
+img {
+outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%; float: left; clear: both; display: block;
+}
+body {
+color: #333333; padding: 0; margin: 0; text-align: left; line-height: 1.3;
+}
+body {
+font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: normal; font-size: 12px; line-height: 16px;
+}
+a:hover {
+color: #333333 !important;
+}
+a:active {
+color: #333333 !important;
+}
+a:visited {
+color: #333333 !important;
+}
+h1 a:active {
+color: #333333 !important;
+}
+h2 a:active {
+color: #333333 !important;
+}
+h3 a:active {
+color: #333333 !important;
+}
+h4 a:active {
+color: #333333 !important;
+}
+h5 a:active {
+color: #333333 !important;
+}
+h6 a:active {
+color: #333333 !important;
+}
+h1 a:visited {
+color: #333333 !important;
+}
+h2 a:visited {
+color: #333333 !important;
+}
+h3 a:visited {
+color: #333333 !important;
+}
+h4 a:visited {
+color: #333333 !important;
+}
+h5 a:visited {
+color: #333333 !important;
+}
+h6 a:visited {
+color: #333333 !important;
+}
+table.button:hover td {
+background: #1a1a1a !important;
+}
+table.button:visited td {
+background: #1a1a1a !important;
+}
+table.button:active td {
+background: #1a1a1a !important;
+}
+table.button:hover td a {
+color: #fff !important;
+}
+table.button:visited td a {
+color: #fff !important;
+}
+table.button:active td a {
+color: #fff !important;
+}
+table.button:hover td {
+background: #1a1a1a !important;
+}
+table.tiny-button:hover td {
+background: #1a1a1a !important;
+}
+table.small-button:hover td {
+background: #1a1a1a !important;
+}
+table.medium-button:hover td {
+background: #1a1a1a !important;
+}
+table.large-button:hover td {
+background: #1a1a1a !important;
+}
+table.button:hover td a {
+color: #ffffff !important;
+}
+table.button:active td a {
+color: #ffffff !important;
+}
+table.button td a:visited {
+color: #ffffff !important;
+}
+table.tiny-button:hover td a {
+color: #ffffff !important;
+}
+table.tiny-button:active td a {
+color: #ffffff !important;
+}
+table.tiny-button td a:visited {
+color: #ffffff !important;
+}
+table.small-button:hover td a {
+color: #ffffff !important;
+}
+table.small-button:active td a {
+color: #ffffff !important;
+}
+table.small-button td a:visited {
+color: #ffffff !important;
+}
+table.medium-button:hover td a {
+color: #ffffff !important;
+}
+table.medium-button:active td a {
+color: #ffffff !important;
+}
+table.medium-button td a:visited {
+color: #ffffff !important;
+}
+table.large-button:hover td a {
+color: #ffffff !important;
+}
+table.large-button:active td a {
+color: #ffffff !important;
+}
+table.large-button td a:visited {
+color: #ffffff !important;
+}
+table.secondary:hover td {
+background: #d0d0d0 !important; color: #555;
+}
+table.secondary:hover td a {
+color: #555 !important;
+}
+table.secondary td a:visited {
+color: #555 !important;
+}
+table.secondary:active td a {
+color: #555 !important;
+}
+table.success:hover td {
+background: #396516 !important;
+}
+table.alert:hover td {
+background: #67080a !important;
+}
+body.outlook p {
+display: inline !important;
+}
+body {
+background-color: #787878;
+}
+body {
+color: #333333;
+}
+body {
+background-color: #787878;
+}
+body {
+width: 100% !important; min-width: 100%; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; margin: 0; padding: 0;
+}
+.ExternalClass {
+width: 100%;
+}
+.ExternalClass {
+line-height: 100%;
+}
+#backgroundTable {
+margin: 0; padding: 0; width: 100% !important; line-height: 100% !important;
+}
+img {
+outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%; float: left; clear: both; display: block;
+}
+body {
+color: #333333; padding: 0; margin: 0; text-align: left; line-height: 1.3;
+}
+body {
+font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: normal; font-size: 12px; line-height: 16px;
+}
+a:hover {
+color: #333333 !important;
+}
+a:active {
+color: #333333 !important;
+}
+a:visited {
+color: #333333 !important;
+}
+h1 a:active {
+color: #333333 !important;
+}
+h2 a:active {
+color: #333333 !important;
+}
+h3 a:active {
+color: #333333 !important;
+}
+h4 a:active {
+color: #333333 !important;
+}
+h5 a:active {
+color: #333333 !important;
+}
+h6 a:active {
+color: #333333 !important;
+}
+h1 a:visited {
+color: #333333 !important;
+}
+h2 a:visited {
+color: #333333 !important;
+}
+h3 a:visited {
+color: #333333 !important;
+}
+h4 a:visited {
+color: #333333 !important;
+}
+h5 a:visited {
+color: #333333 !important;
+}
+h6 a:visited {
+color: #333333 !important;
+}
+table.button:hover td {
+background: #1a1a1a !important;
+}
+table.button:visited td {
+background: #1a1a1a !important;
+}
+table.button:active td {
+background: #1a1a1a !important;
+}
+table.button:hover td a {
+color: #fff !important;
+}
+table.button:visited td a {
+color: #fff !important;
+}
+table.button:active td a {
+color: #fff !important;
+}
+table.button:hover td {
+background: #1a1a1a !important;
+}
+table.tiny-button:hover td {
+background: #1a1a1a !important;
+}
+table.small-button:hover td {
+background: #1a1a1a !important;
+}
+table.medium-button:hover td {
+background: #1a1a1a !important;
+}
+table.large-button:hover td {
+background: #1a1a1a !important;
+}
+table.button:hover td a {
+color: #ffffff !important;
+}
+table.button:active td a {
+color: #ffffff !important;
+}
+table.button td a:visited {
+color: #ffffff !important;
+}
+table.tiny-button:hover td a {
+color: #ffffff !important;
+}
+table.tiny-button:active td a {
+color: #ffffff !important;
+}
+table.tiny-button td a:visited {
+color: #ffffff !important;
+}
+table.small-button:hover td a {
+color: #ffffff !important;
+}
+table.small-button:active td a {
+color: #ffffff !important;
+}
+table.small-button td a:visited {
+color: #ffffff !important;
+}
+table.medium-button:hover td a {
+color: #ffffff !important;
+}
+table.medium-button:active td a {
+color: #ffffff !important;
+}
+table.medium-button td a:visited {
+color: #ffffff !important;
+}
+table.large-button:hover td a {
+color: #ffffff !important;
+}
+table.large-button:active td a {
+color: #ffffff !important;
+}
+table.large-button td a:visited {
+color: #ffffff !important;
+}
+table.secondary:hover td {
+background: #d0d0d0 !important; color: #555;
+}
+table.secondary:hover td a {
+color: #555 !important;
+}
+table.secondary td a:visited {
+color: #555 !important;
+}
+table.secondary:active td a {
+color: #555 !important;
+}
+table.success:hover td {
+background: #396516 !important;
+}
+table.alert:hover td {
+background: #67080a !important;
+}
+body.outlook p {
+display: inline !important;
+}
+body {
+background-color: #787878;
+}
+body {
+color: #333333;
+}
+@media only screen and (max-width: 720px) {
+  table[class="body"] img {
+    width: auto !important; height: auto !important;
+  }
+  table[class="body"] center {
+    min-width: 0 !important;
+  }
+  table[class="body"] .container {
+    width: 95% !important;
+  }
+  table[class="body"] .row {
+    width: 100% !important; display: block !important;
+  }
+  table[class="body"] .wrapper {
+    display: block !important; padding-right: 0 !important;
+  }
+  table[class="body"] .columns {
+    table-layout: fixed !important; float: none !important; width: 100% !important; padding-right: 0px !important; padding-left: 0px !important; display: block !important;
+  }
+  table[class="body"] .column {
+    table-layout: fixed !important; float: none !important; width: 100% !important; padding-right: 0px !important; padding-left: 0px !important; display: block !important;
+  }
+  table[class="body"] .wrapper.first .columns {
+    display: table !important;
+  }
+  table[class="body"] .wrapper.first .column {
+    display: table !important;
+  }
+  table[class="body"] table.columns td {
+    width: 100% !important;
+  }
+  table[class="body"] table.column td {
+    width: 100% !important;
+  }
+  table[class="body"] .columns td.one {
+    width: 8.333333% !important;
+  }
+  table[class="body"] .column td.one {
+    width: 8.333333% !important;
+  }
+  table[class="body"] .columns td.two {
+    width: 16.666666% !important;
+  }
+  table[class="body"] .column td.two {
+    width: 16.666666% !important;
+  }
+  table[class="body"] .columns td.three {
+    width: 25% !important;
+  }
+  table[class="body"] .column td.three {
+    width: 25% !important;
+  }
+  table[class="body"] .columns td.four {
+    width: 33.333333% !important;
+  }
+  table[class="body"] .column td.four {
+    width: 33.333333% !important;
+  }
+  table[class="body"] .columns td.five {
+    width: 41.666666% !important;
+  }
+  table[class="body"] .column td.five {
+    width: 41.666666% !important;
+  }
+  table[class="body"] .columns td.six {
+    width: 50% !important;
+  }
+  table[class="body"] .column td.six {
+    width: 50% !important;
+  }
+  table[class="body"] .columns td.seven {
+    width: 58.333333% !important;
+  }
+  table[class="body"] .column td.seven {
+    width: 58.333333% !important;
+  }
+  table[class="body"] .columns td.eight {
+    width: 66.666666% !important;
+  }
+  table[class="body"] .column td.eight {
+    width: 66.666666% !important;
+  }
+  table[class="body"] .columns td.nine {
+    width: 75% !important;
+  }
+  table[class="body"] .column td.nine {
+    width: 75% !important;
+  }
+  table[class="body"] .columns td.ten {
+    width: 83.333333% !important;
+  }
+  table[class="body"] .column td.ten {
+    width: 83.333333% !important;
+  }
+  table[class="body"] .columns td.eleven {
+    width: 91.666666% !important;
+  }
+  table[class="body"] .column td.eleven {
+    width: 91.666666% !important;
+  }
+  table[class="body"] .columns td.twelve {
+    width: 100% !important;
+  }
+  table[class="body"] .column td.twelve {
+    width: 100% !important;
+  }
+  table[class="body"] td.offset-by-one {
+    padding-left: 0 !important;
+  }
+  table[class="body"] td.offset-by-two {
+    padding-left: 0 !important;
+  }
+  table[class="body"] td.offset-by-three {
+    padding-left: 0 !important;
+  }
+  table[class="body"] td.offset-by-four {
+    padding-left: 0 !important;
+  }
+  table[class="body"] td.offset-by-five {
+    padding-left: 0 !important;
+  }
+  table[class="body"] td.offset-by-six {
+    padding-left: 0 !important;
+  }
+  table[class="body"] td.offset-by-seven {
+    padding-left: 0 !important;
+  }
+  table[class="body"] td.offset-by-eight {
+    padding-left: 0 !important;
+  }
+  table[class="body"] td.offset-by-nine {
+    padding-left: 0 !important;
+  }
+  table[class="body"] td.offset-by-ten {
+    padding-left: 0 !important;
+  }
+  table[class="body"] td.offset-by-eleven {
+    padding-left: 0 !important;
+  }
+  table[class="body"] table.columns td.expander {
+    width: 1px !important;
+  }
+  table[class="body"] .right-text-pad {
+    padding-left: 10px !important;
+  }
+  table[class="body"] .text-pad-right {
+    padding-left: 10px !important;
+  }
+  table[class="body"] .left-text-pad {
+    padding-right: 10px !important;
+  }
+  table[class="body"] .text-pad-left {
+    padding-right: 10px !important;
+  }
+  table[class="body"] .hide-for-small {
+    display: none !important;
+  }
+  table[class="body"] .show-for-desktop {
+    display: none !important;
+  }
+  table[class="body"] .show-for-small {
+    display: inherit !important;
+  }
+  table[class="body"] .hide-for-desktop {
+    display: inherit !important;
+  }
+  table[class="container"] .block-grid td {
+    width: 100% !important;
+  }
+  table[class="body"] .webicon img {
+    width: 30px !important; height: 30px !important;
+  }
+  table[class="body"] .contentArticles .title {
+    padding-top: 0 !important;
+  }
+  table[class="body"] .contentArticles .inner {
+    padding-bottom: 9px !important;
+  }
+  table[class="body"] .contentArticles.last .inner {
+    padding-bottom: 10px !important;
+  }
+  table[class="body"] .contentArticles .wrapper.last .inner {
+    padding-top: 0 !important;
+  }
+  table[class="body"] .contentBottom .wrapper .inner {
+    padding-top: 10px !important;
+  }
+  table[class="body"] .contentBottom .wrapper .border {
+    border-top: none !important;
+  }
+  table[class="body"] .contentBottom .wrapper .preTitle {
+    line-height: 22px !important;
+  }
+  table[class="body"] .contentBottom .borderContainer {
+    display: none !important; visibility: hidden !important;
+  }
+  table[class="body"] .contentArticles {
+    border-bottom: 1px dotted #6b6b6b !important;
+  }
+  table[class="body"] .contentArticles .title {
+    border-top: none !important;
+  }
+  table[class="body"] .contentArticles.last {
+    border-bottom: none !important;
+  }
+  table[class="body"] img {
+    width: auto !important; height: auto !important;
+  }
+  table[class="body"] center {
+    min-width: 0 !important;
+  }
+  table[class="body"] .container {
+    width: 95% !important;
+  }
+  table[class="body"] .row {
+    width: 100% !important; display: block !important;
+  }
+  table[class="body"] .wrapper {
+    display: block !important; padding-right: 0 !important;
+  }
+  table[class="body"] .columns {
+    table-layout: fixed !important; float: none !important; width: 100% !important; padding-right: 0px !important; padding-left: 0px !important; display: block !important;
+  }
+  table[class="body"] .column {
+    table-layout: fixed !important; float: none !important; width: 100% !important; padding-right: 0px !important; padding-left: 0px !important; display: block !important;
+  }
+  table[class="body"] .wrapper.first .columns {
+    display: table !important;
+  }
+  table[class="body"] .wrapper.first .column {
+    display: table !important;
+  }
+  table[class="body"] table.columns td {
+    width: 100% !important;
+  }
+  table[class="body"] table.column td {
+    width: 100% !important;
+  }
+  table[class="body"] .columns td.one {
+    width: 8.333333% !important;
+  }
+  table[class="body"] .column td.one {
+    width: 8.333333% !important;
+  }
+  table[class="body"] .columns td.two {
+    width: 16.666666% !important;
+  }
+  table[class="body"] .column td.two {
+    width: 16.666666% !important;
+  }
+  table[class="body"] .columns td.three {
+    width: 25% !important;
+  }
+  table[class="body"] .column td.three {
+    width: 25% !important;
+  }
+  table[class="body"] .columns td.four {
+    width: 33.333333% !important;
+  }
+  table[class="body"] .column td.four {
+    width: 33.333333% !important;
+  }
+  table[class="body"] .columns td.five {
+    width: 41.666666% !important;
+  }
+  table[class="body"] .column td.five {
+    width: 41.666666% !important;
+  }
+  table[class="body"] .columns td.six {
+    width: 50% !important;
+  }
+  table[class="body"] .column td.six {
+    width: 50% !important;
+  }
+  table[class="body"] .columns td.seven {
+    width: 58.333333% !important;
+  }
+  table[class="body"] .column td.seven {
+    width: 58.333333% !important;
+  }
+  table[class="body"] .columns td.eight {
+    width: 66.666666% !important;
+  }
+  table[class="body"] .column td.eight {
+    width: 66.666666% !important;
+  }
+  table[class="body"] .columns td.nine {
+    width: 75% !important;
+  }
+  table[class="body"] .column td.nine {
+    width: 75% !important;
+  }
+  table[class="body"] .columns td.ten {
+    width: 83.333333% !important;
+  }
+  table[class="body"] .column td.ten {
+    width: 83.333333% !important;
+  }
+  table[class="body"] .columns td.eleven {
+    width: 91.666666% !important;
+  }
+  table[class="body"] .column td.eleven {
+    width: 91.666666% !important;
+  }
+  table[class="body"] .columns td.twelve {
+    width: 100% !important;
+  }
+  table[class="body"] .column td.twelve {
+    width: 100% !important;
+  }
+  table[class="body"] td.offset-by-one {
+    padding-left: 0 !important;
+  }
+  table[class="body"] td.offset-by-two {
+    padding-left: 0 !important;
+  }
+  table[class="body"] td.offset-by-three {
+    padding-left: 0 !important;
+  }
+  table[class="body"] td.offset-by-four {
+    padding-left: 0 !important;
+  }
+  table[class="body"] td.offset-by-five {
+    padding-left: 0 !important;
+  }
+  table[class="body"] td.offset-by-six {
+    padding-left: 0 !important;
+  }
+  table[class="body"] td.offset-by-seven {
+    padding-left: 0 !important;
+  }
+  table[class="body"] td.offset-by-eight {
+    padding-left: 0 !important;
+  }
+  table[class="body"] td.offset-by-nine {
+    padding-left: 0 !important;
+  }
+  table[class="body"] td.offset-by-ten {
+    padding-left: 0 !important;
+  }
+  table[class="body"] td.offset-by-eleven {
+    padding-left: 0 !important;
+  }
+  table[class="body"] table.columns td.expander {
+    width: 1px !important;
+  }
+  table[class="body"] .right-text-pad {
+    padding-left: 10px !important;
+  }
+  table[class="body"] .text-pad-right {
+    padding-left: 10px !important;
+  }
+  table[class="body"] .left-text-pad {
+    padding-right: 10px !important;
+  }
+  table[class="body"] .text-pad-left {
+    padding-right: 10px !important;
+  }
+  table[class="body"] .hide-for-small {
+    display: none !important;
+  }
+  table[class="body"] .show-for-desktop {
+    display: none !important;
+  }
+  table[class="body"] .show-for-small {
+    display: inherit !important;
+  }
+  table[class="body"] .hide-for-desktop {
+    display: inherit !important;
+  }
+  table[class="container"] .block-grid td {
+    width: 100% !important;
+  }
+  table[class="body"] .webicon img {
+    width: 30px !important; height: 30px !important;
+  }
+  table[class="body"] .contentArticles .title {
+    padding-top: 0 !important;
+  }
+  table[class="body"] .contentArticles .inner {
+    padding-bottom: 9px !important;
+  }
+  table[class="body"] .contentArticles.last .inner {
+    padding-bottom: 10px !important;
+  }
+  table[class="body"] .contentArticles .wrapper.last .inner {
+    padding-top: 0 !important;
+  }
+  table[class="body"] .contentBottom .wrapper .inner {
+    padding-top: 10px !important;
+  }
+  table[class="body"] .contentBottom .wrapper .border {
+    border-top: none !important;
+  }
+  table[class="body"] .contentBottom .wrapper .preTitle {
+    line-height: 22px !important;
+  }
+  table[class="body"] .contentBottom .borderContainer {
+    display: none !important; visibility: hidden !important;
+  }
+  table[class="body"] .contentArticles {
+    border-bottom: 1px dotted #6b6b6b !important;
+  }
+  table[class="body"] .contentArticles .title {
+    border-top: none !important;
+  }
+  table[class="body"] .contentArticles.last {
+    border-bottom: none !important;
+  }
+}
+</style>
+<style type="text/css" data-premailer="ignore">
+/* Firefox debug */
+@media only screen and (max-width: 720px) {
+  @-moz-document url-prefix() {
+    table[class="body"] img { width: 100% !important; }
+  }
+}
+
+</style>
+	<table class="body" style="background: #787878; border-collapse: collapse; border-spacing: 0; color: #333333; empty-cells: hide; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; height: 100%; line-height: 16px; margin: 0; padding: 0; text-align: left; vertical-align: top; width: 100%" bgcolor="#787878" width="100%" height="100%" cellpadding="0" cellspacing="0">
+		<tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+			<td class="center" align="center" valign="top" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #333333; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; padding: 0; text-align: center; vertical-align: top; word-break: break-word">
+				<center style="min-width: 720px; width: 100%">
+					<table class="container" style="background: #ffffff; border-collapse: collapse; border-spacing: 0; empty-cells: hide; margin: 0 auto; padding: 0; text-align: inherit; vertical-align: top; width: 720px" bgcolor="#ffffff" width="720" cellpadding="0" cellspacing="0">
+						<tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+							<td style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #333333; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; padding: 0; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+
+								<!-- ONLINE START -->
+								<table class="row contentOnline" style="background: #787878; border-collapse: collapse; border-spacing: 0; color: #ffffff !important; display: block; empty-cells: hide; padding: 0px; position: relative; text-align: left; vertical-align: top; width: 100%" bgcolor="#787878" width="100%" cellpadding="0" cellspacing="0">
+									<tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+										<td class="wrapper last" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #ffffff !important; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; padding: 0 0px 0px; position: relative; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+											<table class="twelve columns" style="border-collapse: collapse; border-spacing: 0; empty-cells: hide; margin: 0 auto; padding: 0; text-align: left; vertical-align: top; width: 720px" width="720" cellpadding="0" cellspacing="0">
+												<tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+													<td class="center" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #ffffff !important; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; padding: 0px 0px 0; text-align: center; vertical-align: top; word-break: break-word" align="center" valign="top">
+														<span class="inner text-pad" style="color: #ffffff !important; display: block; padding: 10px">
+															<% if isOnline=False then %>
+															<gab_lien_message_online>
+															<small class="online" style="display: block; font-size: 11px; padding-bottom: 5px">
+																Pour visualiser ce message en ligne, <a target="_blank" class="link_underline" href="<%=online_url%>" style="color: #ffffff !important; text-decoration: underline">suivez ce lien</a>.
+															</small>
+															</gab_lien_message_online>
+															<% end if %>
+															<strong class="name" style="display: block"><%=civilite%>&#160;<%=nom_client%>, votre newsletter du <a class="link_disabled" href="#" style="color: #ffffff !important; cursor: default !important; pointer-events: none !important; text-decoration: none !important"><%=get_date%></a>.</strong>
+														</span>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+					        	<!-- ONLINE END -->
+								
+								<% if logo_groupement=True then %>
+								<!-- HEADER GROUPE START -->
+								<table class="row header" style="background: #787878; border-collapse: collapse; border-spacing: 0; display: block; empty-cells: hide; padding: 0px; position: relative; text-align: left; vertical-align: top; width: 100%" bgcolor="#787878" width="100%" cellpadding="0" cellspacing="0">
+									<tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+										<td class="wrapper last" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #333333; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; padding: 0 0px 0px; position: relative; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+											<table class="twelve columns" style="border-collapse: collapse; border-spacing: 0; empty-cells: hide; margin: 0 auto; padding: 0; text-align: left; vertical-align: top; width: 720px" width="720" cellpadding="0" cellspacing="0">
+												<tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+													<td class="eight sub-columns first" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #333333; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; min-width: 0px; padding: 0px 0 0 0px; text-align: left; vertical-align: top; width: 66.666666%; word-break: break-word" align="left" valign="top" width="66.666666%">
+														<a target="_blank" class="link_box" href="http://<%=url_site_exp%>" style="color: #333333; display: block; outline: none; text-decoration: none">
+															<img src="http://<%=url_site_exp%>/uploads/assets/header-newsletter-site.png" alt="Header Newsletter Site" width="480" height="96" style="-ms-interpolation-mode: bicubic; border: none; clear: both; display: block; float: left; max-width: 100%; outline: none; text-decoration: none; width: auto" align="left" />
+														</a>
+													</td>
+													<td class="four sub-columns last" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #333333; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; min-width: 0px; padding: 0px 0 0 0px; text-align: left; vertical-align: top; width: 33.333333%; word-break: break-word" align="left" valign="top" width="33.333333%">
+														<a target="_blank" class="link_box" href="http://<%=lien_groupement%>" style="color: #333333; display: block; outline: none; text-decoration: none">
+															<img src="http://<%=url_site_exp%>/uploads/assets/header-newsletter-groupe.png" alt="Header Newsletter Groupe" width="240" height="96" style="-ms-interpolation-mode: bicubic; border: none; clear: both; display: block; float: left; max-width: 100%; outline: none; text-decoration: none; width: auto" align="left" />
+														</a>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+								<!-- HEADER GROUPE END -->
+								<% else %>
+								<!-- HEADER START -->
+								<table class="row header" style="background: #787878; border-collapse: collapse; border-spacing: 0; display: block; empty-cells: hide; padding: 0px; position: relative; text-align: left; vertical-align: top; width: 100%" bgcolor="#787878" width="100%" cellpadding="0" cellspacing="0">
+								    <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+								        <td class="wrapper first" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #333333; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; padding: 0 0px 0px; position: relative; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+								            <table class="twelve columns" style="border-collapse: collapse; border-spacing: 0; empty-cells: hide; margin: 0 auto; padding: 0; text-align: left; vertical-align: top; width: 720px" width="720" cellpadding="0" cellspacing="0">
+								                <tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+								                    <td class="center" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #333333; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; padding: 0px 0px 0; text-align: center; vertical-align: top; word-break: break-word" align="center" valign="top">
+								                    	<a target="_blank" href="http://<%=url_site_exp%>" style="color: #333333; text-decoration: none">
+								                            <img class="link_box center" src="http://<%=url_site_exp%>/uploads/assets/header-newsletter.png" alt="Header Newsletter" width="720" height="96" style="-ms-interpolation-mode: bicubic; border: none; clear: both; display: block; float: none; margin: 0 auto; max-width: 100%; outline: none; text-decoration: none; width: auto" align="none" />
+								                        </a>
+								                    </td>
+								                </tr>
+								            </table>
+								        </td>
+								    </tr>
+								</table>
+								<!-- HEADER END -->
+								<% end if %>
+								
+								<% if(texte_vacances <> "") then %>
+								<!-- TEXTEVACANCES START -->
+								<table class="row contentCabInform" bgcolor="<%=colorParsing.Item("nlCntCabBackground")%>" style="background: <%=colorParsing.Item("nlCntCabBackground")%>; border-collapse: collapse; border-spacing: 0; color: <%=colorParsing.Item("nlCntCabText")%> !important; display: block; empty-cells: hide; padding: 0px; position: relative; text-align: left; vertical-align: top; width: 100%" width="100%" cellpadding="0" cellspacing="0">
+									<tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+										<td class="wrapper last" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: <%=colorParsing.Item("nlCntCabText")%> !important; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; padding: 0 0px 0px; position: relative; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+											<table class="twelve columns" style="border-collapse: collapse; border-spacing: 0; empty-cells: hide; margin: 0 auto; padding: 0; text-align: left; vertical-align: top; width: 720px" width="720" cellpadding="0" cellspacing="0">
+												<tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+													<td style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: <%=colorParsing.Item("nlCntCabText")%> !important; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; padding: 0px 0px 0; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+														<span class="inner text-pad" style="color: <%=colorParsing.Item("nlCntCabText")%> !important; display: block; padding: 10px">
+															<%=texte_vacances%>
+														</span>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+								<!-- TEXTEVACANCES END -->
+								<% end if %>
+								
+								<%
+								if ((rsCount(0)>0)) then
+									if not rs.eof then 
+										while not (rs.eof)
+								%>
+								<!-- CABINFORM START -->
+								<table class="row contentCabInform" bgcolor="<%=colorParsing.Item("nlCntCabBackground")%>" style="background: <%=colorParsing.Item("nlCntCabBackground")%>; border-collapse: collapse; border-spacing: 0; color: <%=colorParsing.Item("nlCntCabText")%> !important; display: block; empty-cells: hide; padding: 0px; position: relative; text-align: left; vertical-align: top; width: 100%" width="100%" cellpadding="0" cellspacing="0">
+									<tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+										<td class="wrapper last" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: <%=colorParsing.Item("nlCntCabText")%> !important; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; padding: 0 0px 0px; position: relative; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+											<table class="twelve columns" style="border-collapse: collapse; border-spacing: 0; empty-cells: hide; margin: 0 auto; padding: 0; text-align: left; vertical-align: top; width: 720px" width="720" cellpadding="0" cellspacing="0">
+												<tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+													<td style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: <%=colorParsing.Item("nlCntCabText")%> !important; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; padding: 0px 0px 0; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+														<%
+														lien_cab=rs("lien")
+														if (lien_cab <> "") then
+														%>
+														<a target="_blank" class="link_box inner text-pad" href="<%=lien_cab%>" style="color: <%=colorParsing.Item("nlCntCabText")%> !important; display: block; outline: none; padding: 10px; text-decoration: none">
+															<h2 class="title" style="color: <%=colorParsing.Item("nlCntCabTitle")%>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: normal; line-height: 1.1; margin: 0; padding: 0 0 5px; text-align: left; word-break: normal" align="left"><%=rs("titre")%></h2>
+															<span class="text"><%=rs("texte")%></span>
+															<span class="readMore" style="display: block; font-weight: bold; padding-top: 10px">
+																<span class="icon-rsaquo" style="bottom: -0.05em; font-size: 150%; font-style: normal; line-height: 0; vertical-align: baseline">&#8250;</span>&#160;lire la suite</span>
+															
+														</a>
+														<% else %>
+														<span class="inner text-pad" style="color: <%=colorParsing.Item("nlCntCabText")%> !important; display: block; padding: 10px">
+															<h2 class="title" style="color: <%=colorParsing.Item("nlCntCabTitle")%>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: normal; line-height: 1.1; margin: 0; padding: 0 0 5px; text-align: left; word-break: normal" align="left"><%=rs("titre")%></h2>
+															<span class="text"><%=rs("texte")%></span>
+														</span>
+														<% end if %>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+								<!-- CABINFORM END -->
+								<%
+										rs.movenext
+										wend
+									end if
+								end if
+								%>
+
+								<!-- ALAUNE START -->
+								<%
+								if idarticleAlaune="" then idarticleAlaune=request.QueryString("amp;idarticleAlaune")
+									SQLArticleAlaune="SELECT * FROM CHAPITRES_FLASHS_INFOS WHERE (IDCHAPITRE_FLASH_INFOS = "& idarticleAlaune &")"
+									Set rsArticleAlaune=conn.Execute(SQLArticleAlaune)
+									id_de_larticle=mid(rsArticleAlaune("URL_DETAIL_INFO"),13,len(rsArticleAlaune("URL_DETAIL_INFO"))-16)
+
+									article_une_url_v3 = rsArticleAlaune("URL_DETAIL_V3")
+								%>
+								<table class="row contentALaUne" style="background: #4b606d; border-collapse: collapse; border-spacing: 0; color: #ffffff !important; display: block; empty-cells: hide; padding: 0px; position: relative; text-align: left; vertical-align: top; width: 100%" bgcolor="#4b606d" width="100%" cellpadding="0" cellspacing="0">
+									<tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+										<td class="wrapper first" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #ffffff !important; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; padding: 0 0px 0px; position: relative; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+											<table class="six columns" style="border-collapse: collapse; border-spacing: 0; empty-cells: hide; margin: 0 auto; padding: 0; text-align: left; vertical-align: top; width: 360px" width="360" cellpadding="0" cellspacing="0">
+												<tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+													<td style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #ffffff !important; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; padding: 0px 0px 0; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+														<a target="_blank" class="link_box inner text-pad" href="http://<%=url_site_exp%>/<%=article_une_url_v3%>" style="color: #ffffff !important; display: block; outline: none; padding: 10px; text-decoration: none">
+															<h1 class="title" style="color: #ffffff; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 22px; font-weight: normal; line-height: 1.1; margin: 0; padding: 0 0 5px; text-align: left; word-break: normal" align="left"><%=rsArticleAlaune("TITRE_CHAPITRE_FLASH_INFOS")%></h1>
+															<span class="text"><%=rsArticleAlaune("CONTENU_CHAPITRE_FLASH_INFOS")%></span>
+															<span class="readMore" style="color: #d2d7db; display: block; font-weight: bold; padding-top: 10px">
+																<span class="icon-rsaquo" style="bottom: -0.05em; font-size: 150%; font-style: normal; line-height: 0; vertical-align: baseline">&#8250;</span>&#160;lire la suite</span>
+															
+														</a>
+													</td>
+												</tr>
+											</table>
+										</td>
+										<td class="wrapper last" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #ffffff !important; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; padding: 0 0px 0px; position: relative; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+											<table class="six columns" style="border-collapse: collapse; border-spacing: 0; empty-cells: hide; margin: 0 auto; padding: 0; text-align: left; vertical-align: top; width: 360px" width="360" cellpadding="0" cellspacing="0">
+												<tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+													<td style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #ffffff !important; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; padding: 0px 0px 0; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+														<img src="http://e-newsletter.expert-infos.com/_infos/_photos/<%=id_de_larticle%>-f.jpg" width="360" height="240" alt="Article &#224; la Une" style="-ms-interpolation-mode: bicubic; clear: both; display: block; float: left; max-width: 100%; outline: none; text-decoration: none; width: auto" align="left" />
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+								<!-- ALAUNE END -->
+
+								<!-- ARTICLES START -->
+								<%
+								idarticle=idarticle&"-"
+								if idarticle="" then request.QueryString("amp;idarticle")
+								article=Mid(idarticle,1,(len(idarticle)))
+								nbc_desc=len(article)
+								k=1
+								i=1
+								
+				    			while k <= nbc_desc
+								carn=asc(Mid(article,k,1))
+								car=Mid(article,k,1)
+								if carn = 45 then
+									SQLArticle="SELECT * FROM CHAPITRES_FLASHS_INFOS WHERE (IDCHAPITRE_FLASH_INFOS = "& cart &")"
+									Set rsArticle=conn.Execute(SQLArticle)
+									id_de_larticle=mid(rsArticle("URL_DETAIL_INFO"),13,len(rsArticle("URL_DETAIL_INFO"))-16)
+									
+									SQLIdArticle="SELECT * FROM CHAPITRES_FLASHS_INFOS WHERE (IDCHAPITRE_FLASH_INFOS = "& cart &")"
+									Set rsIdArticle=conn.Execute(SQLIdArticle)
+									id_flash=rsIdArticle("ID_FLASH_INFOS")
+																						
+									CountArt="SELECT COUNT(*) FROM CHAPITRES_FLASHS_INFOS WHERE ID_FLASH_INFOS="& id_flash
+									set rsCountArt=conn.Execute(CountArt)
+									nbrart=rsCountArt(0)
+
+									article_url_v3 = rsArticle("URL_DETAIL_V3")
+									
+								    if (i<(nbrart-1)) then
+								%>
+								<table class="row contentArticles" style="border-collapse: collapse; border-spacing: 0; color: #333333 !important; display: block; empty-cells: hide; padding: 0px; position: relative; text-align: left; vertical-align: top; width: 100%" width="100%" cellpadding="0" cellspacing="0">
+									<tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+										<td class="wrapper first" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #333333 !important; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; padding: 0 0px 0px; position: relative; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+											<table class="five columns" style="border-collapse: collapse; border-spacing: 0; empty-cells: hide; margin: 0 auto; padding: 0; text-align: left; vertical-align: top; width: 300px" width="300" cellpadding="0" cellspacing="0">
+												<tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+													<td style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #333333 !important; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; padding: 0px 0px 0; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+														<a target="_blank" class="link_box inner text-pad-left" href="http://<%=url_site_exp%>/<%=article_url_v3%>" style="color: #333333 !important; display: block; outline: none; padding-bottom: 0; padding-left: 10px; padding-top: 10px; text-decoration: none">
+															<img src="http://e-newsletter.expert-infos.com/_infos/_photos/<%=id_de_larticle%>-h.jpg" width="290" height="133" alt="" style="-ms-interpolation-mode: bicubic; border: none; clear: both; display: block; float: none; max-width: 100%; outline: none; text-decoration: none; width: auto" align="none" />
+														</a>
+													</td>
+												</tr>
+											</table>
+										</td>
+										<td class="wrapper last" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #333333 !important; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; padding: 0 0px 0px; position: relative; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+											<table class="seven columns" style="border-collapse: collapse; border-spacing: 0; empty-cells: hide; margin: 0 auto; padding: 0; text-align: left; vertical-align: top; width: 420px" width="420" cellpadding="0" cellspacing="0">
+												<tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+													<td style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #333333 !important; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; padding: 0px 0px 0; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+														<a target="_blank" class="link_box inner text-pad" href="http://<%=url_site_exp%>/<%=article_url_v3%>" style="color: #333333 !important; display: block; outline: none; padding: 10px 10px 0; text-decoration: none">
+															<h2 class="title" style="border-top-color: #6b6b6b; border-top-style: dotted; border-top-width: 1px; color: #333333; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: normal; line-height: 1.1; margin: 0; padding: 4px 0 5px; text-align: left; word-break: normal" align="left">
+																<span class="icon-rsaquo" style="bottom: -0.05em; color: <%=colorParsing.Item("nlCntArtIconColor")%>; font-size: 150%; font-style: normal; line-height: 0; vertical-align: baseline">&#8250;</span>&#160;<%=rsArticle("TITRE_CHAPITRE_FLASH_INFOS")%>
+															</h2>
+															<span class="text"><%=rsArticle("CONTENU_CHAPITRE_FLASH_INFOS")%></span>
+															<span class="readMore" style="color: <%=colorParsing.Item("nlCntArtReadMore")%>; display: block; font-weight: bold; padding-top: 5px">lire la suite</span>
+														</a>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+								<% else %>
+								<table class="row contentArticles last" style="border-collapse: collapse; border-spacing: 0; color: #333333 !important; display: block; empty-cells: hide; padding: 0px; position: relative; text-align: left; vertical-align: top; width: 100%" width="100%" cellpadding="0" cellspacing="0">
+									<tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+										<td class="wrapper first" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #333333 !important; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; padding: 0 0px 0px; position: relative; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+											<table class="five columns" style="border-collapse: collapse; border-spacing: 0; empty-cells: hide; margin: 0 auto; padding: 0; text-align: left; vertical-align: top; width: 300px" width="300" cellpadding="0" cellspacing="0">
+												<tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+													<td style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #333333 !important; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; padding: 0px 0px 0; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+														<a target="_blank" class="link_box inner text-pad-left" href="http://<%=url_site_exp%>/<%=article_url_v3%>" style="color: #333333 !important; display: block; outline: none; padding-bottom: 10px; padding-left: 10px; padding-top: 10px; text-decoration: none">
+															<img src="http://e-newsletter.expert-infos.com/_infos/_photos/<%=id_de_larticle%>-h.jpg" width="290" height="133" alt="" style="-ms-interpolation-mode: bicubic; border: none; clear: both; display: block; float: none; max-width: 100%; outline: none; text-decoration: none; width: auto" align="none" />
+														</a>
+													</td>
+												</tr>
+											</table>
+										</td>
+										<td class="wrapper last" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #333333 !important; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; padding: 0 0px 0px; position: relative; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+											<table class="seven columns" style="border-collapse: collapse; border-spacing: 0; empty-cells: hide; margin: 0 auto; padding: 0; text-align: left; vertical-align: top; width: 420px" width="420" cellpadding="0" cellspacing="0">
+												<tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+													<td style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #333333 !important; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; padding: 0px 0px 0; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+														<a target="_blank" class="link_box inner text-pad" href="http://<%=url_site_exp%>/<%=article_url_v3%>" style="color: #333333 !important; display: block; outline: none; padding: 10px; text-decoration: none">
+															<h2 class="title" style="border-top-color: #6b6b6b; border-top-style: dotted; border-top-width: 1px; color: #333333; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: normal; line-height: 1.1; margin: 0; padding: 4px 0 5px; text-align: left; word-break: normal" align="left">
+																<span class="icon-rsaquo" style="bottom: -0.05em; color: <%=colorParsing.Item("nlCntArtIconColor")%>; font-size: 150%; font-style: normal; line-height: 0; vertical-align: baseline">&#8250;</span>&#160;<%=rsArticle("TITRE_CHAPITRE_FLASH_INFOS")%>
+															</h2>
+															<span class="text"><%=rsArticle("CONTENU_CHAPITRE_FLASH_INFOS")%></span>
+															<span class="readMore" style="color: <%=colorParsing.Item("nlCntArtReadMore")%>; display: block; font-weight: bold; padding-top: 5px">lire la suite</span>
+														</a>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+								<%
+									end if 	
+									i=i+1
+										cart=""
+									else
+									    cart=cart+car
+									end if
+									k=k+1
+									wend
+								%>
+								<!-- ARTICLES END -->
+
+								<!-- BOTTOM START -->
+								<table class="row contentBottom" style="border-collapse: collapse; border-spacing: 0; display: block; empty-cells: hide; padding: 0px; position: relative; text-align: left; vertical-align: top; width: 100%" width="100%" cellpadding="0" cellspacing="0">
+									<tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+										<td class="chiffre wrapper first" style="-moz-hyphens: auto; -webkit-hyphens: auto; background: #eaeaea; border-collapse: collapse !important; color: #333333 !important; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; padding: 0 0px 0px; position: relative; text-align: left; vertical-align: top; word-break: break-word" align="left" bgcolor="#eaeaea" valign="top">
+											<table class="five columns" style="border-collapse: collapse; border-spacing: 0; empty-cells: hide; margin: 0 auto; padding: 0; text-align: left; vertical-align: top; width: 300px" width="300" cellpadding="0" cellspacing="0">
+												<tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+													<td style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #333333 !important; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; padding: 0px 0px 0; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+														<a target="_blank" class="link_box inner text-pad" href="http://<%=url_site_exp%>/<%=url_chiffre_v3%>" style="color: #333333 !important; display: block; outline: none; padding: 10px; text-decoration: none">
+															<span class="preTitle" style="color: <%=colorParsing.Item("nlCntChfPreTitle")%>; display: block; font-size: 33px; font-weight: lighter; line-height: 18.7px; padding-top: 3.66666667px"><%=chiffre%></span>
+															<h2 class="title" style="color: #333333; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: normal; line-height: 1.1; margin: 0; padding: 10px 0 5px; text-align: left; word-break: normal" align="left"><%=titre_chiffre%></h2>
+															<span class="text">Retrouvez tous les indicateurs sociaux, fiscaux, et juridiques dans la rubrique &#171;&#160;Chiffres&#160;utiles&#160;&#187; de notre site.</span>
+														</a>
+													</td>
+												</tr>
+											</table>
+										</td>
+										<td class="question wrapper last" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #333333; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; padding: 0 0px 0px; position: relative; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+											<table class="seven columns" style="border-collapse: collapse; border-spacing: 0; empty-cells: hide; margin: 0 auto; padding: 0; text-align: left; vertical-align: top; width: 420px" width="420" cellpadding="0" cellspacing="0">
+												<tr class="borderContainer" style="padding: 0; text-align: left; vertical-align: top" align="left">
+													<td style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #333333; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; padding: 0px 0px 0; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top"><span class="borderOffset left right" style="display: block; padding-left: 10px; padding-right: 10px"><span class="border" style="border-top-color: #6b6b6b; border-top-style: dotted; border-top-width: 1px; display: block; font-size: 0; height: 9px; line-height: 0"></span></span></td>
+												</tr>
+												<tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+													<td style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #333333; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; padding: 0px 0px 0; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+														<span class="inner text-pad" style="display: block; padding: 0 10px 10px">
+															<span class="preTitle" style="color: <%=colorParsing.Item("nlCntQtnPreTitle")%>; display: block; font-size: 33px; font-weight: lighter; line-height: 18.7px; padding-top: 3.66666667px">La question</span>
+															<a target="_blank" class="link_box" href="http://<%=url_site_exp%>/<%=url_question_v3%>" style="color: #333333; display: block; outline: none; text-decoration: none">
+																<h2 class="title" style="color: #333333; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: normal; line-height: 1.1; margin: 0; padding: 10px 0 5px; text-align: left; word-break: normal" align="left"><%=titre_question%></h2>
+																<span class="text"><%=question%></span>
+															</a>
+														</span>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+								<!-- BOTTOM END -->
+
+								<!-- CONTACT START -->
+								<table class="row contentContact" bgcolor="<%=colorParsing.Item("nlCntCctBackground")%>" style="background: <%=colorParsing.Item("nlCntCctBackground")%>; border-collapse: collapse; border-spacing: 0; color: <%=colorParsing.Item("nlCntCctText")%> !important; display: block; empty-cells: hide; padding: 0px; position: relative; text-align: left; vertical-align: top; width: 100%" width="100%" cellpadding="0" cellspacing="0">
+									<tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+										<td class="wrapper first" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: <%=colorParsing.Item("nlCntCctText")%> !important; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; padding: 0 0px 0px; position: relative; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+										<% if(isSocialNetwork=False)Then %>
+											<table class="twelve columns" style="border-collapse: collapse; border-spacing: 0; empty-cells: hide; margin: 0 auto; padding: 0; text-align: left; vertical-align: top; width: 720px" width="720" cellpadding="0" cellspacing="0">
+										<% else %>
+											<table class="seven columns" style="border-collapse: collapse; border-spacing: 0; empty-cells: hide; margin: 0 auto; padding: 0; text-align: left; vertical-align: top; width: 420px" width="420" cellpadding="0" cellspacing="0">
+										<% end if %>
+												<tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+													<td style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: <%=colorParsing.Item("nlCntCctText")%> !important; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; padding: 0px 0px 0; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+														<span class="inner text-pad" style="color: <%=colorParsing.Item("nlCntCctText")%> !important; display: block; padding: 10px">
+															<strong><% if (len(trim(type_client)) > 1) then response.write(type_client & " ") end if %><%=raison_sociale_exp%></strong>
+															<br />
+															<% lien_adresse=Server.URLEncode(adresse1_exp & " " & adresse2_exp & " " & code_postal_exp & " " & commune_exp) %>
+															<a target="_blank" href="http://maps.apple.com/?q=<%=lien_adresse%>" style="color: <%=colorParsing.Item("nlCntCctText")%> !important; text-decoration: none"><%
+																'affichage adresse1'
+																nbc_desc=len(adresse1_exp)
+																k=1
+																while k <= nbc_desc
+																	carn=asc(Mid(adresse1_exp,k,1))
+																	car=Mid(adresse1_exp,k,1)
+																	if carn = 10 then
+																		Response.Write "&nbsp;-&nbsp;"
+																	else
+																		Response.Write(car)
+																	end if
+																	k=k+1
+																wend
+																Response.Write "&nbsp;-&nbsp;"
+																'affichage adresse2'
+																if (len(trim(adresse2_exp)) > 1) then
+																	nbc_desc=len(adresse2_exp)
+																	k=1
+																	while k <= nbc_desc
+																		carn=asc(Mid(adresse2_exp,k,1))
+																		car=Mid(adresse2_exp,k,1)
+																		if carn = 10 then
+																			Response.Write "&nbsp;-&nbsp;"
+																		else
+																			Response.Write(car)
+																		end if
+																		k=k+1
+																	wend 
+																	Response.Write "&nbsp;-&nbsp;"
+																end if 
+																if (len(trim(code_postal_exp)) > 1) then response.write(code_postal_exp &"&nbsp;")  end if
+																if (len(trim(commune_exp)) > 1) then response.write(commune_exp) end if
+															%></a>
+															<% if (len(trim(tel_cabinet)) > 1) then %>
+															<br />
+															T&#233;l. <span class="appleLinks"><a href="tel:<%=tel_cabinet%>" style="color: <%=colorParsing.Item("nlCntCctText")%> !important; text-decoration: none"><%=tel_cabinet%></a></span>
+															<% end if %>
+															<% if (len(trim(fax_cabinet)) > 1) then %>
+															&#160;-&#160;Fax&#160;: <a class="link_disabled" href="#" style="color: <%=colorParsing.Item("nlCntCctText")%> !important; cursor: default !important; pointer-events: none !important; text-decoration: none !important"><%=fax_cabinet%></a>
+															<% end if %>
+
+															<br />
+															<a class="link_underline" href="mailto:<%=email_exp%>" style="color: <%=colorParsing.Item("nlCntCctText")%> !important; text-decoration: underline"><%=email_exp%></a>
+															-
+															<%
+															if type_abo="4" then
+																url_site_exp = rsCabinet("url_site_exp")
+															end if
+															%>
+															<a target="_blank" class="link_underline" href="http://<%=url_site_exp%>" style="color: <%=colorParsing.Item("nlCntCctText")%> !important; text-decoration: underline"><%=url_site_exp%></a>
+														</span>
+													</td>
+												</tr>
+											</table>
+										</td>
+										<% if(isSocialNetwork=True)Then %>
+										<td class="webicons wrapper last" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: <%=colorParsing.Item("nlCntCctText")%> !important; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; padding: 0 0px 0px; position: relative; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+											<table class="five columns" style="border-collapse: collapse; border-spacing: 0; empty-cells: hide; margin: 0 auto; padding: 0; text-align: left; vertical-align: top; width: 300px" width="300" cellpadding="0" cellspacing="0">
+												<tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+													<td style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: <%=colorParsing.Item("nlCntCctText")%> !important; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; padding: 0px 0px 0; text-align: right; vertical-align: top; word-break: break-word" align="right" valign="top">
+														<span class="inner text-pad" style="color: <%=colorParsing.Item("nlCntCctText")%> !important; display: block; padding: 10px">
+															<% if (url_facebook<>"") then %>
+															<a target="_blank" class="webicon first" href="http://<%=url_facebook%>" style="color: <%=colorParsing.Item("nlCntCctText")%> !important; display: inline; font-size: 0; line-height: 0; padding: 0 5px 5px 0; text-decoration: none">
+																<img src="http://www.expert-infos.com/_newsletter/_logos/webicon-facebook.gif" alt="Facebook" width="30" height="30" style="-ms-interpolation-mode: bicubic; border-radius: 5px; border: none; clear: both; display: inline; float: none; max-width: 100%; outline: none; text-decoration: none; width: auto" align="none" />
+															</a>
+															<% end if %>
+															<% if (url_google<>"") then %>
+															<a target="_blank" class="webicon" href="http://<%=url_google%>" style="color: <%=colorParsing.Item("nlCntCctText")%> !important; display: inline; font-size: 0; line-height: 0; padding: 0 5px 5px; text-decoration: none">
+																<img src="http://www.expert-infos.com/_newsletter/_logos/webicon-googleplus.gif" alt="Google+" width="30" height="30" style="-ms-interpolation-mode: bicubic; border-radius: 5px; border: none; clear: both; display: inline; float: none; max-width: 100%; outline: none; text-decoration: none; width: auto" align="none" />
+															</a>
+															<% end if %>
+															<% if (url_linkedin<>"") then %>
+															<a target="_blank" class="webicon" href="http://<%=url_linkedin%>" style="color: <%=colorParsing.Item("nlCntCctText")%> !important; display: inline; font-size: 0; line-height: 0; padding: 0 5px 5px; text-decoration: none">
+																<img src="http://www.expert-infos.com/_newsletter/_logos/webicon-linkedin.gif" alt="Linkedin" width="30" height="30" style="-ms-interpolation-mode: bicubic; border-radius: 5px; border: none; clear: both; display: inline; float: none; max-width: 100%; outline: none; text-decoration: none; width: auto" align="none" />
+															</a>
+															<% end if %>
+															<% if (url_twitter<>"") then %>
+															<a target="_blank" class="webicon" href="http://<%=url_twitter%>" style="color: <%=colorParsing.Item("nlCntCctText")%> !important; display: inline; font-size: 0; line-height: 0; padding: 0 5px 5px; text-decoration: none">
+																<img src="http://www.expert-infos.com/_newsletter/_logos/webicon-twitter.gif" alt="Twitter" width="30" height="30" style="-ms-interpolation-mode: bicubic; border-radius: 5px; border: none; clear: both; display: inline; float: none; max-width: 100%; outline: none; text-decoration: none; width: auto" align="none" />
+															</a>
+															<% end if %>
+															<% if (url_viadeo<>"") then %>
+															<a target="_blank" class="webicon" href="http://<%=url_viadeo%>" style="color: <%=colorParsing.Item("nlCntCctText")%> !important; display: inline; font-size: 0; line-height: 0; padding: 0 5px 5px; text-decoration: none">
+																<img src="http://www.expert-infos.com/_newsletter/_logos/webicon-viadeo.gif" alt="Viadeo" width="30" height="30" style="-ms-interpolation-mode: bicubic; border-radius: 5px; border: none; clear: both; display: inline; float: none; max-width: 100%; outline: none; text-decoration: none; width: auto" align="none" />
+															</a>
+															<% end if %>
+															<% if (url_vimeo<>"") then %>
+															<a target="_blank" class="webicon" href="http://<%=url_vimeo%>" style="color: <%=colorParsing.Item("nlCntCctText")%> !important; display: inline; font-size: 0; line-height: 0; padding: 0 5px 5px; text-decoration: none">
+																<img src="http://www.expert-infos.com/_newsletter/_logos/webicon-vimeo.gif" alt="Vimeo" width="30" height="30" style="-ms-interpolation-mode: bicubic; border-radius: 5px; border: none; clear: both; display: inline; float: none; max-width: 100%; outline: none; text-decoration: none; width: auto" align="none" />
+															</a>
+															<% end if %>
+															<% if (url_youtube<>"") then %>
+															<a target="_blank" class="webicon last" href="http://<%=url_youtube%>" style="color: <%=colorParsing.Item("nlCntCctText")%> !important; display: inline; font-size: 0; line-height: 0; padding: 0 0 5px 5px; text-decoration: none">
+																<img src="http://www.expert-infos.com/_newsletter/_logos/webicon-youtube.gif" alt="Youtube" width="30" height="30" style="-ms-interpolation-mode: bicubic; border-radius: 5px; border: none; clear: both; display: inline; float: none; max-width: 100%; outline: none; text-decoration: none; width: auto" align="none" />
+															</a>
+															<% end if %>
+														</span>
+													</td>
+												</tr>
+											</table>
+										</td>
+										<% end if %>
+									</tr>
+								</table>
+								<!-- CONTACT END -->
+
+								<!-- FOOTER START -->
+								<gab_lien_blackliste>
+								<%
+								if (type_abo="4") then
+									url_site_exp = rsCabinet("repertoire_ei")&".expert-infos.com"
+								end if
+								%>
+								<table class="row footer" style="background: #787878; border-collapse: collapse; border-spacing: 0; color: #ffffff !important; display: block; empty-cells: hide; padding: 0px; position: relative; text-align: left; vertical-align: top; width: 100%" bgcolor="#787878" width="100%" cellpadding="0" cellspacing="0">
+									<tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+										<td class="wrapper last" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #ffffff !important; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; padding: 0 0px 0px; position: relative; text-align: left; vertical-align: top; word-break: break-word" align="left" valign="top">
+											<table class="twelve columns" style="border-collapse: collapse; border-spacing: 0; empty-cells: hide; margin: 0 auto; padding: 0; text-align: left; vertical-align: top; width: 720px" width="720" cellpadding="0" cellspacing="0">
+												<tr style="padding: 0; text-align: left; vertical-align: top" align="left">
+													<td class="center" style="-moz-hyphens: auto; -webkit-hyphens: auto; border-collapse: collapse !important; color: #ffffff !important; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; hyphens: auto; line-height: 16px; margin: 0; padding: 0px 0px 0; text-align: center; vertical-align: top; word-break: break-word" align="center" valign="top">
+														<span class="inner text-pad" style="color: #ffffff !important; display: block; padding: 10px">
+															<small style="font-size: 11px">
+																Si vous ne souhaitez plus recevoir cette newsletter, veuillez acc&#233;der &#224; la page de <a target="_blank" class="link_underline" href="http://e-newsletter.expert-infos.com/_e-newsletter/desinscription.asp?fintrack=&amp;a=<%=id_client%>" lien_blackliste style="color: #ffffff !important; text-decoration: underline">d&#233;sinscription</a>.
+															</small>
+														</span>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+								</gab_lien_blackliste>
+								<!-- FOOTER END -->
+
+							</td>
+						</tr>
+					</table>
+				</center>
+			</td>
+		</tr>
+    </table>
+  </body>
+</html>

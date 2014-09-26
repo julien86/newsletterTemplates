@@ -1,0 +1,613 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--{{%%{{
+Set Conn = Server.CreateObject("ADODB.Connection")
+Conn.ConnectionString =  application("Base_Newsletter")
+Conn.Open
+
+id_client=request.QueryString("id_client")
+
+CLIENT_SQL="SELECT * FROM CLIENTS WHERE (ID_CLIENT = "&id_client&")"
+Set rsClient=conn.Execute(CLIENT_SQL)
+
+id_exp=rsClient("id_exp")
+id_civilite=rsClient("id_civilite")
+if id_civilite = "1" then
+    civilite="Monsieur"
+elseif id_civilite="2" then
+    civilite="Madame"
+elseif id_civilite="3" then
+    civilite="Mademoiselle"
+elseif id_civilite="4" then
+    civilite="Ma&#238;tre"
+elseif id_civilite="5" then
+    civilite="Docteur"
+elseif id_civilite="6" then
+    civilite="Professeur"
+else
+    civilite=""
+end if
+
+nom_client=rsClient("nom_client")
+
+CABINET_SQL="SELECT * FROM EXPERTS_COMPTABLES WHERE (ID_EXP = "&id_exp&")"
+set rsCabinet=conn.Execute(CABINET_SQL)
+
+if not rsCabinet.eof then
+
+	repertoire_ei = rsCabinet("repertoire_ei")
+	nom_exp = rsCabinet("nom_exp")
+	prenom_exp = rsCabinet("prenom_exp")
+	raison_sociale_exp = rsCabinet("raison_sociale_exp")
+	type_client = rsCabinet("type_client")	
+	adresse1_exp = rsCabinet("adresse1_exp")
+	adresse2_exp = rsCabinet("adresse2_exp")
+	code_postal_exp = rsCabinet("code_postal_exp")
+	commune_exp = rsCabinet("commune_exp")
+	tel_cabinet = rsCabinet("tel_cabinet")
+	fax_cabinet = rsCabinet("fax_cabinet")
+	email_exp = rsCabinet("email_exp")
+	type_perso_site = rsCabinet("type_perso_site")
+	login_site_exp = rsCabinet("login_site_exp")
+	mdp_site_exp = rsCabinet("mdp_site_exp")
+	type_abo = rsCabinet("type_abo")
+	if type_abo="4" then
+	url_site_exp=rsCabinet("url_site_V3")
+	else
+	url_site_exp = rsCabinet("url_site_exp")
+	end if
+	url_facebook = rsCabinet("Facebook")
+	url_twitter = rsCabinet("Twitter")
+	url_linkedin = rsCabinet("Linkedin")
+	url_viadeo = rsCabinet("Viadeo")
+	url_google = rsCabinet("Google")
+	url_vimeo = rsCabinet("Vimeo")
+	url_youtube = rsCabinet("Youtube")
+	logo_groupement = rsCabinet("logo_groupement")
+	lien_groupement = rsCabinet("lien_groupement")
+
+	Select Case type_perso_site
+		Case 38 txt_perso_site = "pop"
+		Case 39 txt_perso_site = "disco"
+	End Select
+end if
+
+'Detect isSocialNetwork'
+if(url_facebook = "" and url_twitter="" and url_linkedin="" and url_viadeo="" and url_google="" and url_vimeo="" and url_youtube="") then
+	isSocialNetwork = False
+else
+	isSocialNetwork = True
+end if
+
+'Detect isOnline'
+if(Request.QueryString("is_online") = 1)then
+	isOnline = True
+else
+	isOnline = False
+end if
+
+'Detect isCollaborateur'
+if(Request.QueryString("is_coll") = 1)then
+	isCollaborateur = True
+else
+	isCollaborateur = False
+end if
+
+set rsCount=conn.Execute("SELECT COUNT(*) FROM FLASH_CABINFORM WHERE id_exp="& id_exp &" AND (afficher=1)")
+set rs=conn.Execute("SELECT * FROM FLASH_CABINFORM WHERE id_exp=" & id_exp &" AND (afficher=1) ORDER BY ordre")
+}}%%}}-->
+<!--{{%%{{ 'CSS Parser. Use colorParsing.Item("nlColorVariable")' }}%%}}-->
+<!--#include file="../parserCSS.inc"-->
+<!--#include file="emill-v2bis.asp"-->
+<!--{{%%{{
+idarticleAlaune=request.QueryString("idarticleAlaune")
+idarticle=request.QueryString("idarticle")
+
+'Changement pour newsletter collaborateur'
+if isCollaborateur=True then
+	get_coll = "&is_coll=1"
+	get_date = la_date_collaborateur
+else
+	get_coll = ""
+	get_date = la_date
+end if
+
+online_url = "http://e-newsletter.expert-infos.com/_e-newsletter/"&la_semaine&"/flashinfos_mail_V3_resp.asp?id_client="&id_client&"&idarticle="&idarticle&"&idarticleAlaune="&idarticleAlaune&"&is_online=1"&get_coll&"&fintrack="
+}}%%}}-->
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" type="text/css" media="all" href="theme/css/style.css" /><title>Newsletter hebdomadaire du <!--{{%%{{=get_date}}%%}}--><!--DEL{{-->get_date<!--}}DEL--></title>
+</head>
+<body>
+<style type="text/css" data-premailer="ignore">
+/* Firefox debug */
+@media only screen and (max-width: 720px) {
+  @-moz-document url-prefix() {
+    table[class="body"] img { width: 100% !important; }
+  }
+}
+/*DEL{{*/img[src*="%%{{"], img[src*="}}%%"], .-premailer-hidden { display: none !important; visibility: hidden !important; }/*}}DEL*/
+</style>
+	<table class="body">
+		<tr>
+			<td class="center" align="center" valign="top">
+				<center>
+					<table class="container">
+						<tr>
+							<td>
+
+								<!-- ONLINE START -->
+								<table class="row contentOnline">
+									<tr>
+										<td class="wrapper last">
+											<table class="twelve columns">
+												<tr>
+													<td class="center">
+														<span class="inner text-pad">
+															<!--{{%%{{ if isOnline=False then }}%%}}-->
+															<!--{{<gab_lien_message_online>}}-->
+															<small class="online">
+																Pour visualiser ce message en ligne, <a target="_blank" class="link_underline" href="%%{{=online_url}}%%">suivez ce lien</a>.
+															</small>
+															<!--{{</gab_lien_message_online>}}-->
+															<!--{{%%{{ end if }}%%}}-->
+															<strong class="name"><!--{{%%{{=civilite}}%%}}--><!--DEL{{-->civilite<!--}}DEL-->&nbsp;<!--{{%%{{=nom_client}}%%}}--><!--DEL{{-->nom_client<!--}}DEL-->, votre newsletter du <a class="link_disabled" href="#"><!--{{%%{{=get_date}}%%}}--><!--DEL{{-->get_date<!--}}DEL--></a>.</strong>
+														</span>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+					        	<!-- ONLINE END -->
+								
+								<!--{{%%{{ if logo_groupement=True then }}%%}}-->
+								<!-- HEADER GROUPE START -->
+								<table class="row header">
+									<tr>
+										<td class="wrapper last">
+											<table class="twelve columns">
+												<tr>
+													<td class="eight sub-columns first">
+														<a target="_blank" class="link_box" href="http://%%{{=url_site_exp}}%%">
+															<img src="http://%%{{=url_site_exp}}%%/uploads/assets/header-newsletter-site.png" alt="Header Newsletter Site" width="480" height="96" /><!--DEL{{--><img src="http://lorempixel.com/960/192/city/" alt="NomCabinet" width="480" height="96" /><!--}}DEL-->
+														</a>
+													</td>
+													<td class="four sub-columns last">
+														<a target="_blank" class="link_box" href="http://%%{{=lien_groupement}}%%">
+															<img src="http://%%{{=url_site_exp}}%%/uploads/assets/header-newsletter-groupe.png" alt="Header Newsletter Groupe" width="240" height="96" /><!--DEL{{--><img src="http://lorempixel.com/480/192/technics/" alt="NomCabinet" width="240" height="96" /><!--}}DEL-->
+														</a>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+								<!-- HEADER GROUPE END -->
+								<!--{{%%{{ else }}%%}}-->
+								<!-- HEADER START -->
+								<table class="row header">
+								    <tr>
+								        <td class="wrapper first">
+								            <table class="twelve columns">
+								                <tr>
+								                    <td class="center">
+								                    	<a target="_blank" href="http://%%{{=url_site_exp}}%%">
+								                            <img class="link_box center" src="http://%%{{=url_site_exp}}%%/uploads/assets/header-newsletter.png" alt="Header Newsletter" width="720" height="96" /><!--DEL{{--><img src="http://ec-tenor.expert-infos.com/uploads/assets/header-newsletter.png" width="720" height="96" alt="" /><!--}}DEL-->
+								                        </a>
+								                    </td>
+								                </tr>
+								            </table>
+								        </td>
+								    </tr>
+								</table>
+								<!-- HEADER END -->
+								<!--{{%%{{ end if }}%%}}-->
+								
+								<!--{{%%{{ if(texte_vacances <> "") then }}%%}}-->
+								<!-- TEXTEVACANCES START -->
+								<table class="row contentCabInform" bgcolor="##((nlCntCabBackground))##">
+									<tr>
+										<td class="wrapper last">
+											<table class="twelve columns">
+												<tr>
+													<td>
+														<span class="inner text-pad">
+															<!--{{%%{{=texte_vacances}}%%}}--><!--DEL{{-->texte_vacances<!--}}DEL-->
+														</span>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+								<!-- TEXTEVACANCES END -->
+								<!--{{%%{{ end if }}%%}}-->
+								
+								<!--{{%%{{
+								if ((rsCount(0)>0)) then
+									if not rs.eof then 
+										while not (rs.eof)
+								}}%%}}-->
+								<!-- CABINFORM START -->
+								<table class="row contentCabInform" bgcolor="##((nlCntCabBackground))##">
+									<tr>
+										<td class="wrapper last">
+											<table class="twelve columns">
+												<tr>
+													<td>
+														<!--{{%%{{
+														lien_cab=rs("lien")
+														if (lien_cab <> "") then
+														}}%%}}-->
+														<a target="_blank" class="link_box inner text-pad" href="%%{{=lien_cab}}%%">
+															<h2 class="title"><!--{{%%{{=rs("titre")}}%%}}--><!--DEL{{-->titre<!--}}DEL--></h2>
+															<span class="text"><!--{{%%{{=rs("texte")}}%%}}--><!--DEL{{-->texte<!--}}DEL--></span>
+															<span class="readMore">
+																<span class="icon-rsaquo">&rsaquo;</span>&#160;lire la suite</span>
+															</span>
+														</a>
+														<!--{{%%{{ else }}%%}}-->
+														<span class="inner text-pad">
+															<h2 class="title"><!--{{%%{{=rs("titre")}}%%}}--><!--DEL{{-->titre<!--}}DEL--></h2>
+															<span class="text"><!--{{%%{{=rs("texte")}}%%}}--><!--DEL{{-->texte<!--}}DEL--></span>
+														</span>
+														<!--{{%%{{ end if }}%%}}-->
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+								<!-- CABINFORM END -->
+								<!--{{%%{{
+										rs.movenext
+										wend
+									end if
+								end if
+								}}%%}}-->
+
+								<!-- ALAUNE START -->
+								<!--{{%%{{
+								if idarticleAlaune="" then idarticleAlaune=request.QueryString("amp;idarticleAlaune")
+									SQLArticleAlaune="SELECT * FROM CHAPITRES_FLASHS_INFOS WHERE (IDCHAPITRE_FLASH_INFOS = "& idarticleAlaune &")"
+									Set rsArticleAlaune=conn.Execute(SQLArticleAlaune)
+									id_de_larticle=mid(rsArticleAlaune("URL_DETAIL_INFO"),13,len(rsArticleAlaune("URL_DETAIL_INFO"))-16)
+
+									article_une_url_v3 = rsArticleAlaune("URL_DETAIL_V3")
+								}}%%}}-->
+								<table class="row contentALaUne">
+									<tr>
+										<td class="wrapper first">
+											<table class="six columns">
+												<tr>
+													<td>
+														<a target="_blank" class="link_box inner text-pad" href="http://%%{{=url_site_exp}}%%/%%{{=article_une_url_v3}}%%">
+															<h1 class="title"><!--{{%%{{=rsArticleAlaune("TITRE_CHAPITRE_FLASH_INFOS")}}%%}}--><!--DEL{{-->TITRE_CHAPITRE_FLASH_INFOS<!--}}DEL--></h1>
+															<span class="text"><!--{{%%{{=rsArticleAlaune("CONTENU_CHAPITRE_FLASH_INFOS")}}%%}}--><!--DEL{{-->CONTENU_CHAPITRE_FLASH_INFOS<!--}}DEL--></span>
+															<span class="readMore">
+																<span class="icon-rsaquo">&rsaquo;</span>&#160;lire la suite</span>
+															</span>
+														</a>
+													</td>
+												</tr>
+											</table>
+										</td>
+										<td class="wrapper last">
+											<table class="six columns">
+												<tr>
+													<td>
+														<img src="http://e-newsletter.expert-infos.com/_infos/_photos/%%{{=id_de_larticle}}%%-f.jpg" width="360" height="240" alt="Article à la Une" /><!--DEL{{--><img src="http://lorempixel.com/1440/960/business/" width="360" height="240" alt="" /><!--}}DEL-->
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+								<!-- ALAUNE END -->
+
+								<!-- ARTICLES START -->
+								<!--{{%%{{
+								idarticle=idarticle&"-"
+								if idarticle="" then request.QueryString("amp;idarticle")
+								article=Mid(idarticle,1,(len(idarticle)))
+								nbc_desc=len(article)
+								k=1
+								i=1
+								
+				    			while k <= nbc_desc
+								carn=asc(Mid(article,k,1))
+								car=Mid(article,k,1)
+								if carn = 45 then
+									SQLArticle="SELECT * FROM CHAPITRES_FLASHS_INFOS WHERE (IDCHAPITRE_FLASH_INFOS = "& cart &")"
+									Set rsArticle=conn.Execute(SQLArticle)
+									id_de_larticle=mid(rsArticle("URL_DETAIL_INFO"),13,len(rsArticle("URL_DETAIL_INFO"))-16)
+									
+									SQLIdArticle="SELECT * FROM CHAPITRES_FLASHS_INFOS WHERE (IDCHAPITRE_FLASH_INFOS = "& cart &")"
+									Set rsIdArticle=conn.Execute(SQLIdArticle)
+									id_flash=rsIdArticle("ID_FLASH_INFOS")
+																						
+									CountArt="SELECT COUNT(*) FROM CHAPITRES_FLASHS_INFOS WHERE ID_FLASH_INFOS="& id_flash
+									set rsCountArt=conn.Execute(CountArt)
+									nbrart=rsCountArt(0)
+
+									article_url_v3 = rsArticle("URL_DETAIL_V3")
+									
+								    if (i<(nbrart-1)) then
+								}}%%}}-->
+								<table class="row contentArticles">
+									<tr>
+										<td class="wrapper first">
+											<table class="five columns">
+												<tr>
+													<td>
+														<a target="_blank" class="link_box inner text-pad-left" href="http://%%{{=url_site_exp}}%%/%%{{=article_url_v3}}%%">
+															<img src="http://e-newsletter.expert-infos.com/_infos/_photos/%%{{=id_de_larticle}}%%-h.jpg" width="290" height="133" alt="" /><!--DEL{{--><img src="http://lorempixel.com/1440/660/business/" width="290" height="133" alt="" /><!--}}DEL-->
+														</a>
+													</td>
+												</tr>
+											</table>
+										</td>
+										<td class="wrapper last">
+											<table class="seven columns">
+												<tr>
+													<td>
+														<a target="_blank" class="link_box inner text-pad" href="http://%%{{=url_site_exp}}%%/%%{{=article_url_v3}}%%">
+															<h2 class="title">
+																<span class="icon-rsaquo">&rsaquo;</span>&#160;<!--{{%%{{=rsArticle("TITRE_CHAPITRE_FLASH_INFOS")}}%%}}--><!--DEL{{-->TITRE_CHAPITRE_FLASH_INFOS<!--}}DEL-->
+															</h2>
+															<span class="text"><!--{{%%{{=rsArticle("CONTENU_CHAPITRE_FLASH_INFOS")}}%%}}--><!--DEL{{-->CONTENU_CHAPITRE_FLASH_INFOS<!--}}DEL--></span>
+															<span class="readMore">lire la suite</span>
+														</a>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+								<!--{{%%{{ else }}%%}}-->
+								<table class="row contentArticles last">
+									<tr>
+										<td class="wrapper first">
+											<table class="five columns">
+												<tr>
+													<td>
+														<a target="_blank" class="link_box inner text-pad-left" href="http://%%{{=url_site_exp}}%%/%%{{=article_url_v3}}%%">
+															<img src="http://e-newsletter.expert-infos.com/_infos/_photos/%%{{=id_de_larticle}}%%-h.jpg" width="290" height="133" alt="" /><!--DEL{{--><img src="http://lorempixel.com/1440/660/business/" width="290" height="133" alt="" /><!--}}DEL-->
+														</a>
+													</td>
+												</tr>
+											</table>
+										</td>
+										<td class="wrapper last">
+											<table class="seven columns">
+												<tr>
+													<td>
+														<a target="_blank" class="link_box inner text-pad" href="http://%%{{=url_site_exp}}%%/%%{{=article_url_v3}}%%">
+															<h2 class="title">
+																<span class="icon-rsaquo">&rsaquo;</span>&#160;<!--{{%%{{=rsArticle("TITRE_CHAPITRE_FLASH_INFOS")}}%%}}--><!--DEL{{-->TITRE_CHAPITRE_FLASH_INFOS<!--}}DEL-->
+															</h2>
+															<span class="text"><!--{{%%{{=rsArticle("CONTENU_CHAPITRE_FLASH_INFOS")}}%%}}--><!--DEL{{-->CONTENU_CHAPITRE_FLASH_INFOS<!--}}DEL--></span>
+															<span class="readMore">lire la suite</span>
+														</a>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+								<!--{{%%{{
+									end if 	
+									i=i+1
+										cart=""
+									else
+									    cart=cart+car
+									end if
+									k=k+1
+									wend
+								}}%%}}-->
+								<!-- ARTICLES END -->
+
+								<!-- BOTTOM START -->
+								<table class="row contentBottom">
+									<tr>
+										<td class="agenda wrapper first">
+											<table class="five columns">
+												<tr>
+													<td>
+														<a target="_blank" class="link_box inner text-pad" href="http://%%{{=url_site_exp}}%%/%%{{=url_mois1_v3}}%%">
+															<span class="preTitle"><!--{{%%{{=date1}}%%}}--><!--DEL{{-->date1<!--}}DEL--></span>
+															<h2 class="title"><!--{{%%{{=texte1V3_1}}%%}}--><!--DEL{{-->texte1V3_1<!--}}DEL--></h2>
+															<span class="text"><!--{{%%{{=texte1V3_2}}%%}}--><!--DEL{{-->texte1V3_2<!--}}DEL--></span>
+														</a>
+													</td>
+												</tr>
+											</table>
+										</td>
+										<td class="dessin wrapper last">
+											<table class="seven columns">
+												<tr class="borderContainer">
+													<td><span class="borderOffset left"><span class="border"></span></span></td>
+													<td><span class="borderOffset right"><span class="border"></span></span></td>
+												</tr>
+												<tr>
+													<td class="six sub-columns first">
+														<a target="_blank" class="link_box inner text-pad-left" href="http://%%{{=url_site_exp}}%%/dessin">
+															<span class="preTitle">L'actu'<br/><small>en dessin</small></span>
+															<h3 class="title"><!--{{%%{{=texte_dessin}}%%}}--><!--DEL{{-->texte_dessin<!--}}DEL--></h3>
+															<span class="readMore">
+																<span class="icon-rsaquo">&rsaquo;</span>&#160;agrandir le dessin</span>
+															</span>
+														</a>
+													</td>
+													<td class="six sub-columns last">
+														<a target="_blank" class="link_box inner text-pad" href="http://%%{{=url_site_exp}}%%/dessin">
+															<img src="http://e-newsletter.expert-infos.com/_infos/_photos/%%{{=id_article_dessin}}%%-i.jpg" width="190" height="126" alt="Le dessin de la semaine" /><!--DEL{{--><img src="http://lorempixel.com/720/480/abstract/" width="190" height="126" alt="" /><!--}}DEL-->
+														</a>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+								<!-- BOTTOM END -->
+
+								<!-- CONTACT START -->
+								<table class="row contentContact" bgcolor="##((nlCntCctBackground))##">
+									<tr>
+										<td class="wrapper first">
+										<!--{{%%{{ if(isSocialNetwork=False)Then }}%%}}-->
+											<table class="twelve columns -premailer-hidden"><!--DEL{{--></table><!--}}DEL-->
+										<!--{{%%{{ else }}%%}}-->
+											<table class="seven columns">
+										<!--{{%%{{ end if }}%%}}-->
+												<tr>
+													<td>
+														<span class="inner text-pad">
+															<strong><!--{{%%{{ if (len(trim(type_client)) > 1) then response.write(type_client & " ") end if }}%%%%{{=raison_sociale_exp}}%%}}--><!--DEL{{-->raison_sociale_exp<!--}}DEL--></strong>
+															<br/>
+															<!--{{%%{{ lien_adresse=Server.URLEncode(adresse1_exp & " " & adresse2_exp & " " & code_postal_exp & " " & commune_exp) }}%%}}-->
+															<a target="_blank" href="http://maps.apple.com/?q=%%{{=lien_adresse}}%%"><!--{{%%{{
+																'affichage adresse1'
+																nbc_desc=len(adresse1_exp)
+																k=1
+																while k <= nbc_desc
+																	carn=asc(Mid(adresse1_exp,k,1))
+																	car=Mid(adresse1_exp,k,1)
+																	if carn = 10 then
+																		Response.Write "&nbsp;-&nbsp;"
+																	else
+																		Response.Write(car)
+																	end if
+																	k=k+1
+																wend
+																Response.Write "&nbsp;-&nbsp;"
+																'affichage adresse2'
+																if (len(trim(adresse2_exp)) > 1) then
+																	nbc_desc=len(adresse2_exp)
+																	k=1
+																	while k <= nbc_desc
+																		carn=asc(Mid(adresse2_exp,k,1))
+																		car=Mid(adresse2_exp,k,1)
+																		if carn = 10 then
+																			Response.Write "&nbsp;-&nbsp;"
+																		else
+																			Response.Write(car)
+																		end if
+																		k=k+1
+																	wend 
+																	Response.Write "&nbsp;-&nbsp;"
+																end if 
+																if (len(trim(code_postal_exp)) > 1) then response.write(code_postal_exp &"&nbsp;")  end if
+																if (len(trim(commune_exp)) > 1) then response.write(commune_exp) end if
+															}}%%}}--><!--DEL{{-->adresse<!--}}DEL--></a>
+															<!--{{%%{{ if (len(trim(tel_cabinet)) > 1) then }}%%}}-->
+															<br/>
+															T&eacute;l. <span class="appleLinks"><a href="tel:%%{{=tel_cabinet}}%%"><!--{{%%{{=tel_cabinet}}%%}}--><!--DEL{{-->tel_cabinet<!--}}DEL--></a></span>
+															<!--{{%%{{ end if }}%%}}-->
+															<!--{{%%{{ if (len(trim(fax_cabinet)) > 1) then }}%%}}-->
+															&#160;-&#160;Fax&#160;: <a class="link_disabled" href="#"><!--{{%%{{=fax_cabinet}}%%}}--><!--DEL{{-->fax_cabinet<!--}}DEL--></a>
+															<!--{{%%{{ end if }}%%}}-->
+
+															<br/>
+															<a class="link_underline" href="mailto:%%{{=email_exp}}%%"><!--{{%%{{=email_exp}}%%}}--><!--DEL{{-->email_exp<!--}}DEL--></a>
+															-
+															<!--{{%%{{
+															if type_abo="4" then
+																url_site_exp = rsCabinet("url_site_exp")
+															end if
+															}}%%}}-->
+															<a target="_blank" class="link_underline" href="http://%%{{=url_site_exp}}%%"><!--{{%%{{=url_site_exp}}%%}}--><!--DEL{{-->url_site_exp<!--}}DEL--></a>
+														</span>
+													</td>
+												</tr>
+											</table>
+										</td>
+										<!--{{%%{{ if(isSocialNetwork=True)Then }}%%}}-->
+										<td class="webicons wrapper last">
+											<table class="five columns">
+												<tr>
+													<td>
+														<span class="inner text-pad">
+															<!--{{%%{{ if (url_facebook<>"") then }}%%}}-->
+															<a target="_blank" class="webicon first" href="http://%%{{=url_facebook}}%%">
+																<img src="http://www.expert-infos.com/_newsletter/_logos/webicon-facebook.gif" alt="Facebook" width="30" height="30" />
+															</a>
+															<!--{{%%{{ end if }}%%}}-->
+															<!--{{%%{{ if (url_google<>"") then }}%%}}-->
+															<a target="_blank" class="webicon" href="http://%%{{=url_google}}%%">
+																<img src="http://www.expert-infos.com/_newsletter/_logos/webicon-googleplus.gif" alt="Google+" width="30" height="30" />
+															</a>
+															<!--{{%%{{ end if }}%%}}-->
+															<!--{{%%{{ if (url_linkedin<>"") then }}%%}}-->
+															<a target="_blank" class="webicon" href="http://%%{{=url_linkedin}}%%">
+																<img src="http://www.expert-infos.com/_newsletter/_logos/webicon-linkedin.gif" alt="Linkedin" width="30" height="30" />
+															</a>
+															<!--{{%%{{ end if }}%%}}-->
+															<!--{{%%{{ if (url_twitter<>"") then }}%%}}-->
+															<a target="_blank" class="webicon" href="http://%%{{=url_twitter}}%%">
+																<img src="http://www.expert-infos.com/_newsletter/_logos/webicon-twitter.gif" alt="Twitter" width="30" height="30" />
+															</a>
+															<!--{{%%{{ end if }}%%}}-->
+															<!--{{%%{{ if (url_viadeo<>"") then }}%%}}-->
+															<a target="_blank" class="webicon" href="http://%%{{=url_viadeo}}%%">
+																<img src="http://www.expert-infos.com/_newsletter/_logos/webicon-viadeo.gif" alt="Viadeo" width="30" height="30" />
+															</a>
+															<!--{{%%{{ end if }}%%}}-->
+															<!--{{%%{{ if (url_vimeo<>"") then }}%%}}-->
+															<a target="_blank" class="webicon" href="http://%%{{=url_vimeo}}%%">
+																<img src="http://www.expert-infos.com/_newsletter/_logos/webicon-vimeo.gif" alt="Vimeo" width="30" height="30" />
+															</a>
+															<!--{{%%{{ end if }}%%}}-->
+															<!--{{%%{{ if (url_youtube<>"") then }}%%}}-->
+															<a target="_blank" class="webicon last" href="http://%%{{=url_youtube}}%%">
+																<img src="http://www.expert-infos.com/_newsletter/_logos/webicon-youtube.gif" alt="Youtube" width="30" height="30" />
+															</a>
+															<!--{{%%{{ end if }}%%}}-->
+														</span>
+													</td>
+												</tr>
+											</table>
+										</td>
+										<!--{{%%{{ end if }}%%}}-->
+									</tr>
+								</table>
+								<!-- CONTACT END -->
+
+								<!-- FOOTER START -->
+								<!--{{<gab_lien_blackliste>}}-->
+								<!--{{%%{{
+								if (type_abo="4") then
+									url_site_exp = rsCabinet("repertoire_ei")&".expert-infos.com"
+								end if
+								}}%%}}-->
+								<table class="row footer">
+									<tr>
+										<td class="wrapper last">
+											<table class="twelve columns">
+												<tr>
+													<td class="center">
+														<span class="inner text-pad">
+															<small>
+																Si vous ne souhaitez plus recevoir cette newsletter, veuillez accéder à la page de <a target="_blank" class="link_underline" href="http://e-newsletter.expert-infos.com/_e-newsletter/desinscription.asp?fintrack=&amp;a=%%{{=id_client}}%%" lien_blackliste="lien_blackliste">désinscription</a>.
+															</small>
+														</span>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+								<!--{{</gab_lien_blackliste>}}-->
+								<!-- FOOTER END -->
+
+							</td>
+						</tr>
+					</table>
+				</center>
+			</td>
+		</tr>
+    </table>
+  </body>
+</html>

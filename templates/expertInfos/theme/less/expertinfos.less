@@ -1,0 +1,384 @@
+//
+// Expertinfos theme's newsletter
+// v3.0 | 2014-09-16 09:30
+// --------------------------------------------------
+
+
+// CUSTOM MIXINS
+// --------------------------------------------------
+.newsletterInnerTextColor(@color) {
+	&, td, .inner, a, a:link, a:visited, a:hover, a:focus, a:active { color: @color !important; }
+}
+
+
+// LAYOUT
+// --------------------------------------------------
+
+h1, h2, h3, h4, h5, h6 { line-height: 1.1; }
+
+.inner {
+	display: block;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	img { float: none; }
+}
+
+//suppression paddings verticaux déportés sur classe .inner dans certaines zones
+td.wrapper { padding-top: 0; }
+table.columns td, table.column td { padding-bottom: 0; }
+
+.header {
+	table.columns td.sub-columns,
+	table.column td.sub-columns,
+	table.columns td.sub-column,
+	table.column td.sub-column {
+	  padding-right: 0;
+	}
+}
+
+//en savoir plus
+.readMore {
+	display: block;
+	padding-top: 10px;
+	font-weight: bold;
+}
+
+//icone fléchée
+.icon-rsaquo {
+	font-style: normal;
+	font-size: 150%;
+	line-height: 0;
+	vertical-align: baseline;
+	bottom: -0.05em;
+}
+
+.title { padding-bottom: 5px; }
+
+//sur titres
+.preTitle {
+	display: block;
+	font-weight: lighter;
+	font-size: (@headingsFontSizeH1 * 1.5);
+	line-height: (@headingsFontSizeH1 * 0.85);
+	//compensation décalage entre font-size et line-height
+	padding-top: ((@headingsFontSizeH1 * 0.5) / 3);
+	small { font-size: (@headingsFontSizeH1 * 0.85); }
+	br { font-size: 0 !important; line-height: 0 !important; }
+}
+
+//réseaux sociaux
+.webicons td { text-align: right; }
+.webicon {
+	display: inline;
+	//pour supprimer les espaces
+	font-size: 0;
+	line-height: 0;
+	padding: 0 5px 5px 5px;
+	&.first { padding-left: 0; }
+	&.last { padding-right: 0; }
+	img {
+		display: inline;
+		border-radius: 5px;
+	}
+}
+@media only screen and (max-width: (@containerWidth + @gutterWidth)) {
+	table[class="body"] .webicon img {
+		width: 30px !important;
+		height: 30px !important;
+	}
+}
+
+// contentOnline area
+// -------------------------
+.contentOnline {
+	.online {
+		display: block;
+		padding-bottom: 5px;
+	}
+	.name { display: block; }
+}
+
+// contentArticles area
+// -------------------------
+.contentArticles {
+	.title { padding-top: 4px; }
+	.readMore { padding-top: 5px; }
+	.inner { padding-bottom: 0; }
+	&.last .inner { padding-bottom: 10px; }	
+}
+@media only screen and (max-width: (@containerWidth + @gutterWidth)) {
+	table[class="body"] .contentArticles {
+		.title { padding-top: 0 !important; }
+		.inner { padding-bottom: 9px !important; }
+		&.last .inner { padding-bottom: 10px !important; }
+		.wrapper.last .inner { padding-top: 0 !important; }
+	}
+}
+
+// contentBottom area
+// -------------------------
+.contentBottom {
+	//gestion bordure Interne
+	.borderOffset {
+		display: block;
+		&.left { padding-left: 10px; }
+		&.right { padding-right: 10px; }
+
+		.border {
+			display: block;
+			font-size: 0;
+			line-height: 0;
+			height: 9px;
+		}
+	}
+
+	.wrapper {
+		&.last .inner { padding-top: 0; }
+		.title { padding-top: 10px; }
+		&.dessin .title { padding-top: 5px; }
+	}
+}
+@media only screen and (max-width: (@containerWidth + @gutterWidth)) {
+	table[class="body"] .contentBottom {
+		.wrapper {
+			.inner { padding-top: 10px !important; }
+			.border { border-top: none !important; }
+			.preTitle { line-height: @headingsFontSizeH1 !important; }
+		}
+		.borderContainer {
+			display: none !important;
+			visibility: hidden !important;
+		}
+	}
+}
+
+
+// DEFAULT COLORS
+// --------------------------------------------------
+
+// Body
+// -------------------------
+body, table.body {
+  background-color: @nlBodyBackground;
+}
+
+// Main container
+// -------------------------
+.container { background-color: @nlContainerBackground; }
+
+// Header
+// -------------------------
+//pour supprimer toute zone blanche avant chargement header
+.header { background-color: @nlBodyBackground; }
+
+// Typography
+// -------------------------
+body, table.body, h1, h2, h3, h4, h5, h6, p, td {
+	color: @nlText;
+}
+
+// Links
+// -------------------------
+a {
+	color: @nlLinkColor;
+	&:hover { color: @nlLinkColorHover !important; }
+	&:active { color: @nlLinkColorHover !important; }
+	&:visited { color: @nlLinkColor !important; }
+
+	h1 &, h2 &, h3 &, h4 &, h5 &, h6 & {
+		color: @nlLinkColor;
+		&:active, &:visited { color: @nlLinkColor !important; }
+	}
+
+	.appleLinks & {
+		color: @nlLinkColor;
+		&:hover, &:active { color: @nlLinkColorHover !important; }
+		&:visited { color: @nlLinkColor !important; }
+	}
+}
+
+// contentOnline area
+// -------------------------
+.contentOnline {
+	background-color: @nlCntOnlineBackground;
+	.newsletterInnerTextColor(@nlCntOnlineText);
+}
+
+// contentALaUne area
+// -------------------------
+.contentALaUne {
+	background-color: @nlCntUneBackground;
+	.title { color: @nlCntUneTitle; }
+	.newsletterInnerTextColor(@nlCntUneText);
+	.readMore { color: @nlCntUneReadMore; }
+}
+
+// contentArticles area
+// -------------------------
+.contentArticles {
+	.title {
+		color: @nlCntArtTitle;
+		border-top: 1px dotted @nlCntArtBorder;
+	}
+	.newsletterInnerTextColor(@nlCntArtText);
+}
+//rajout bordure en bas en mode responsive
+@media only screen and (max-width: (@nlContainerWidth + @nlGutterWidth)) {
+	table[class="body"] .contentArticles {
+		.title { border-top: none !important; }
+		border-bottom: 1px dotted @nlCntArtBorder !important;
+		&.last { border-bottom: none !important; }
+	}
+}
+
+// contentBottom area
+// -------------------------
+.contentBottom {
+	.agenda {
+		background-color: @nlCntAgdBackground;
+		.title { color: @nlCntAgdTitle; }
+		.newsletterInnerTextColor(@nlCntAgdText);
+	}
+
+	.chiffre {
+		background-color: @nlCntChfBackground;
+		.title { color: @nlCntChfTitle; }
+		.newsletterInnerTextColor(@nlCntChfText);
+	}
+
+	.dessin {
+		.title { color: @nlCntDsnTitle; }
+		.readMore { color: @nlCntDsnReadMore; }
+		.border { border-top: 1px dotted @nlCntDsnBorder; }
+	}
+
+	.profession {
+		.title { color: @nlCntPrfTitle; }
+		.border { border-top: 1px dotted @nlCntPrfBorder; }
+	}
+
+	.question {
+		.title { color: @nlCntQtnTitle; }
+		.border { border-top: 1px dotted @nlCntQtnBorder; }
+	}
+}
+
+// footer area
+// -------------------------
+.footer {
+	background-color: @nlFooterBackground;
+	.newsletterInnerTextColor(@nlFooterText);
+}
+
+//importation style localisé dans le site pour test
+// @import "newsletter.less";
+//reprise style newsletter.less sans les !important
+//désactivé pour export
+
+
+// CUSTOM COLORS
+// --------------------------------------------------
+
+// contentCabInform area
+// -------------------------
+.contentCabInform {
+	-premailer-background: e("##((nlCntCabBackground))##");
+	.title { color: e("##((nlCntCabTitle))##"); }
+	.newsletterInnerTextColor(e("##((nlCntCabText))##"));
+}
+
+// contentArticles area
+// -------------------------
+.contentArticles {
+	.title {
+		.icon-rsaquo { color: e("##((nlCntArtIconColor))##"); }
+	}
+	.readMore { color: e("##((nlCntArtReadMore))##"); }
+}
+
+
+// contentBottom area
+// -------------------------
+.contentBottom {
+	.agenda {
+		.preTitle { color: e("##((nlCntAgdPreTitle))##"); }
+	}
+
+	.chiffre {
+		.preTitle { color: e("##((nlCntChfPreTitle))##"); }
+	}
+
+	.dessin {
+		.preTitle { color: e("##((nlCntDsnPreTitle))##"); }
+	}
+
+	.profession {
+		.preTitle { color: e("##((nlCntPrfPreTitle))##"); }
+	}
+
+	.question {
+		.preTitle { color: e("##((nlCntQtnPreTitle))##"); }
+	}
+}
+
+
+// contentContact area
+// -------------------------
+.contentContact {
+	-premailer-background: e("##((nlCntCctBackground))##");
+	.newsletterInnerTextColor(e("##((nlCntCctText))##"));
+}
+
+
+// CUSTOM COLORS POUR TEST EN DUR
+// --------------------------------------------------
+
+// contentCabInform area
+// -------------------------
+// .contentCabInform {
+// 	background-color: @nlCntCabBackground;
+// 	.title { color: @nlCntCabTitle; }
+// 	.newsletterInnerTextColor(@nlCntCabText);
+// }
+
+// contentArticles area
+// -------------------------
+// .contentArticles {
+// 	.title {
+// 		.icon-rsaquo { color: @nlCntArtIconColor; }
+// 	}
+// 	.readMore { color: @nlCntArtReadMore; }
+// }
+
+
+// contentBottom area
+// -------------------------
+// .contentBottom {
+// 	.agenda {
+// 		.preTitle { color: @nlCntAgdPreTitle; }
+// 	}
+
+// 	.chiffre {
+// 		.preTitle { color: @nlCntChfPreTitle; }
+// 	}
+
+// 	.dessin {
+// 		.preTitle { color: @nlCntDsnPreTitle; }
+// 	}
+
+// 	.profession {
+// 		.preTitle { color: @nlCntPrfPreTitle; }
+// 	}
+
+// 	.question {
+// 		.preTitle { color: @nlCntQtnPreTitle; }
+// 	}
+// }
+
+
+// contentContact area
+// -------------------------
+// .contentContact {
+// 	background-color: @nlCntCctBackground;
+// 	.newsletterInnerTextColor(@nlCntCctText);
+// }

@@ -1,83 +1,144 @@
 // extends theme's variables.less file here
 
-@rougeEIColor: #d12329;
-@bleuEIColor: #4b606d;
-@grisEIColor: #e6e8eb;
 
-//@colorCouleur1: #a3a2a0;
-//@colorCouleur2: #2f475f;
+// Global values
+// --------------------------------------------------
+
+
+// Expert Infos
+// -------------------------
+@expertInfosRouge: #d12329;
+@expertInfosBleu: #4b606d;
+@expertInfosGris: #e6e8eb;
+
 
 // Main colors
 // -------------------------
-@colorCouleur1: #EE183A;
-@colorCouleur2: #B9ACA5;
-//@colorCouleur3: #918E8C;
-//couleur spécifique pour les blocks BDO
-@colorCouleur4: #EEE9E6;
+@colorCouleur1: @expertInfosRouge;
+@colorCouleur1Clair: lighten(@colorCouleur1, 25%);
+@colorCouleur1Moyen: darken(@colorCouleur1, 15%);
+@colorCouleur1Fonce: darken(@colorCouleur1, 30%);
 
-//@colorCouleur1: #b10034;
-//@colorCouleur2: #a89d6b;
+@colorCouleur2: @expertInfosBleu;
+@colorCouleur2Clair: lighten(@colorCouleur2, 20%);
+@colorCouleur2Moyen: darken(@colorCouleur2, 10%);
+@colorCouleur2Fonce: darken(@colorCouleur2, 25%);
 
-
-
-@colorCouleur3: @grisEIColor;
-@colorCouleur4: #ffffff;
-@colorCouleur5: #ffffff;
-
-
-@ColorPerso1: @colorCouleur1;
-@ColorPerso2: @colorCouleur2;
-@ColorPerso3: @colorCouleur3;
-@ColorPerso4: @colorCouleur4;
+@colorCouleur3: #919191;
+@colorCouleur3Clair: lighten(@colorCouleur3, 35%);
+@colorCouleur3Moyen: lighten(@colorCouleur3, 20%);
+@colorCouleur3Fonce: darken(@colorCouleur3, 20%);
 
 
+// Newsletter Default Colors
+// --------------------------------------------------
+@nlBodyBackground: darken(@colorCouleur3, 10%);
+@nlContainerBackground: #ffffff;
+@nlText: #333333;
+@nlLinkColor: @nlText;
+@nlLinkColorHover: @nlLinkColor;
+@nlHrBorder: darken(@colorCouleur3, 15%);
 
+//couleurs des différentes zones
+@nlCntOnlineBackground: @nlBodyBackground;
+@nlCntOnlineText: #ffffff;
+
+@nlCntUneBackground: @expertInfosBleu;
+@nlCntUneTitle: #ffffff;
+@nlCntUneText: #ffffff;
+@nlCntUneReadMore: mix(@nlCntUneText, @nlCntUneBackground, 75%);
+
+@nlCntArtTitle: @nlText;
+@nlCntArtText: @nlText;
+@nlCntArtBorder: @nlHrBorder;
+
+@nlCntAgdBackground: @colorCouleur3Clair;
+@nlCntAgdTitle: @nlText;
+@nlCntAgdText: @nlText;
+
+@nlCntChfBackground: @colorCouleur3Clair;
+@nlCntChfTitle: @nlText;
+@nlCntChfText: @nlText;
+
+@nlCntDsnTitle: @nlText;
+@nlCntDsnReadMore: lighten(@colorCouleur3, 5%);
+@nlCntDsnBorder: @nlCntArtBorder;
+
+@nlCntPrfTitle: @nlText;
+@nlCntPrfBorder: @nlCntArtBorder;
+
+@nlCntQtnTitle: @nlText;
+@nlCntQtnBorder: @nlCntArtBorder;
+
+@nlFooterBackground: @nlBodyBackground;
+@nlFooterText: #ffffff;
+
+//configuration de la grille
+@nlColumnWidth: 60px;
+@nlGutterWidth: 0px;
+@nlContainerWidth: (11 * @nlGutterWidth + 12 * @nlColumnWidth);
+
+
+// Newsletter Custom Colors
+// --------------------------------------------------
+@nlCntCabBackground: @colorCouleur1;
+@nlCntCabTitle: #ffffff;
+@nlCntCabText: #ffffff;
+
+@nlCntArtIconColor: @colorCouleur1;
+@nlCntArtReadMore: @colorCouleur1;
+
+@nlCntAgdPreTitle: @colorCouleur1;
+@nlCntChfPreTitle: @colorCouleur1;
+@nlCntDsnPreTitle: @colorCouleur1;
+@nlCntPrfPreTitle: @colorCouleur1;
+@nlCntQtnPreTitle: @colorCouleur1;
+
+@nlCntCctBackground: @colorCouleur1;
+@nlCntCctText: #ffffff;
 
 
 // Scaffolding
 // -------------------------
-@bodyBackground:        #777777;
-@containerBackground:   #ffffff;
-@textColor:             @bleuEIColor;
+@bodyBackground: @nlBodyBackground;
+@containerBackground: @nlContainerBackground;
+@textColor: @nlText;
 
 
 // Links
 // -------------------------
-@linkColor:             @textColor;
-
+@linkColor:             @nlLinkColor;
+@linkColorHover:        @nlLinkColorHover;
 
 
 // Typography
 // -------------------------
-@baseFontSize:          14px;
-@baseFontFamily:        Arial, sans-serif, "Helvetica Neue", Helvetica;
-@baseLineHeight:        19px;
-
-@headingsFontFamily:    "Helvetica Neue", Helvetica, Arial, sans-serif;
-@headingsFontWeight:    bold;
+@baseFontSize:          12px;
+@baseLineHeight:        16px;
 @headingsColor:         @textColor;
+@headingsFontWeight:    normal;
+
 
 // Component sizing
 // -------------------------
-// Based on 14px font-size
-
-@headingsFontSizeH1:    25px;
+@headingsFontSizeH1:    22px;
 @headingsFontSizeH2:    18px;
-@headingsFontSizeH3:    45px;
-@headingsFontSizeH4:    15px;
+@headingsFontSizeH3:    16px;
+@headingsFontSizeH4:    14px;
+@headingsFontSizeH5:    13px;
+@headingsFontSizeH6:    12px;
 
+@fontSizeSmall:         11px;
+@fontSizeMini:          9px;
 
-// Panels
-// -------------------------
-@panelBackground: @ColorPerso3;
-@panelBorder: @ColorPerso3;
 
 // Hr border color
 // -------------------------
-@hrBorder: @bleuEIColor;
+@hrBorder: @nlHrBorder;
 
 
 // Grid config
 // --------------------------------------------------
-@columnWidth: 62.5px; //largeur totale de 750px)
-@gutterWidth: 0px;
+@columnWidth: @nlColumnWidth;
+@gutterWidth: @nlGutterWidth;
+@containerWidth: @nlContainerWidth;

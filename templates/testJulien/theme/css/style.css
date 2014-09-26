@@ -1,10 +1,3 @@
-/*!
- *
- * NOT TO EDIT - DON't TOUCH IT
- *
- * Definitions of main template
- * 
- */
 /**********************************************
 * Inkless - Addons                            *
 **********************************************/
@@ -95,7 +88,9 @@ table.body {
   width: 100%;
 }
 table.container {
+  background-color: #ffffff;
   width: 580px;
+  -premailer-width: 580;
   margin: 0 auto;
   text-align: inherit;
 }
@@ -135,39 +130,51 @@ table.container td.last {
 }
 table.one {
   width: 30px;
+  -premailer-width: 30;
 }
 table.two {
   width: 80px;
+  -premailer-width: 80;
 }
 table.three {
   width: 130px;
+  -premailer-width: 130;
 }
 table.four {
   width: 180px;
+  -premailer-width: 180;
 }
 table.five {
   width: 230px;
+  -premailer-width: 230;
 }
 table.six {
   width: 280px;
+  -premailer-width: 280;
 }
 table.seven {
   width: 330px;
+  -premailer-width: 330;
 }
 table.eight {
   width: 380px;
+  -premailer-width: 380;
 }
 table.nine {
   width: 430px;
+  -premailer-width: 430;
 }
 table.ten {
   width: 480px;
+  -premailer-width: 480;
 }
 table.eleven {
   width: 530px;
+  -premailer-width: 530;
 }
 table.twelve {
   width: 580px;
+  -premailer-width: 580;
 }
 table.one center {
   min-width: 30px;
@@ -355,24 +362,31 @@ table.column .text-pad-right {
 }
 .two-up td {
   width: 270px;
+  -premailer-width: 270;
 }
 .three-up td {
   width: 173px;
+  -premailer-width: 173;
 }
 .four-up td {
   width: 125px;
+  -premailer-width: 125;
 }
 .five-up td {
   width: 96px;
+  -premailer-width: 96;
 }
 .six-up td {
   width: 76px;
+  -premailer-width: 76;
 }
 .seven-up td {
   width: 62px;
+  -premailer-width: 62;
 }
 .eight-up td {
   width: 52px;
+  -premailer-width: 52;
 }
 /* Alignment & Visibility Classes */
 table.center,
@@ -433,7 +447,7 @@ h1 {
   font-size: 39.9px;
 }
 h2 {
-  font-size: 35.699999999999996px;
+  font-size: 35.7px;
 }
 h3 {
   font-size: 31.5px;
@@ -466,7 +480,7 @@ p {
   margin-bottom: 10px;
 }
 small {
-  font-size: 9.799999999999999px;
+  font-size: 9.8px;
 }
 a {
   color: #2ba6cb;
@@ -560,7 +574,7 @@ table.large-button td a {
   text-decoration: none;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   color: #ffffff;
-  font-size: 16.099999999999998px;
+  font-size: 16.1px;
   display: block;
   height: 100%;
   width: 100%;
@@ -570,7 +584,7 @@ table.tiny-button td a {
   font-weight: normal;
 }
 table.small-button td a {
-  font-size: 16.099999999999998px;
+  font-size: 16.1px;
 }
 table.medium-button td a {
   font-size: 20.3px;
@@ -774,9 +788,9 @@ body.outlook p {
   table[class="body"] .hide-for-desktop {
     display: inherit !important;
   }
-}
-table {
-  table-layout: fixed;
+  table[class="container"] .block-grid td {
+    width: 100% !important;
+  }
 }
 .appleLinks a {
   color: #2ba6cb;
@@ -812,4 +826,92 @@ a.link_underline:hover,
 a.link_underline:focus {
   text-decoration: underline;
   cursor: pointer;
+}
+a.link_disabled {
+  pointer-events: none !important;
+  cursor: default !important;
+  text-decoration: none !important;
+}
+table {
+  -premailer-cellpadding: 0;
+  -premailer-cellspacing: 0;
+  empty-cells: hide;
+}
+table.row {
+  -premailer-width: 100%;
+}
+table.body {
+  -premailer-height: 100%;
+  -premailer-width: 100%;
+}
+.block-grid {
+  -premailer-width: 100%;
+}
+.body .columns td.one,
+.body .column td.one {
+  -premailer-width: 8.333333%;
+}
+.body .columns td.two,
+.body .column td.two {
+  -premailer-width: 16.666666%;
+}
+.body .columns td.three,
+.body .column td.three {
+  -premailer-width: 25%;
+}
+.body .columns td.four,
+.body .column td.four {
+  -premailer-width: 33.333333%;
+}
+.body .columns td.five,
+.body .column td.five {
+  -premailer-width: 41.666666%;
+}
+.body .columns td.six,
+.body .column td.six {
+  -premailer-width: 50%;
+}
+.body .columns td.seven,
+.body .column td.seven {
+  -premailer-width: 58.333333%;
+}
+.body .columns td.eight,
+.body .column td.eight {
+  -premailer-width: 66.666666%;
+}
+.body .columns td.nine,
+.body .column td.nine {
+  -premailer-width: 75%;
+}
+.body .columns td.ten,
+.body .column td.ten {
+  -premailer-width: 83.333333%;
+}
+.body .columns td.eleven,
+.body .column td.eleven {
+  -premailer-width: 91.666666%;
+}
+.body .columns td.twelve,
+.body .column td.twelve {
+  -premailer-width: 100%;
+}
+td.expander {
+  -premailer-width: 1;
+}
+.sub-grid table {
+  -premailer-width: 100%;
+}
+table.button,
+table.tiny-button,
+table.small-button,
+table.medium-button,
+table.large-button {
+  -premailer-width: 100%;
+}
+table.button td,
+table.tiny-button td,
+table.small-button td,
+table.medium-button td,
+table.large-button td {
+  -premailer-width: auto;
 }
