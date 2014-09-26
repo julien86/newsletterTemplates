@@ -10,7 +10,7 @@
 **********************************************/
 body,
 table.body {
-  background-color: #ffffff;
+  background-color: #ab1519;
 }
 /**********************************************
 * Ink v1.0.5 - Copyright 2013 ZURB Inc        *
@@ -885,4 +885,21 @@ a.link_underline:focus {
 .blocAvis {
   padding-left: 10px !important;
   padding-right: 0px !important;
+}
+.headerPara {
+  background-color: rgba(0, 0, 0, 0.86);
+  padding: 0px 0px 0px 20px;
+  font-size: 140%;
+  line-height: 77px;
+  color: #ffffff;
+  margin: 0px;
+}
+.container {
+  background-color: #ffffff;
+}
+.liens {
+  background-color: #ab1519;
+}
+.surHeader {
+  padding-top: 10px !important;
 }
